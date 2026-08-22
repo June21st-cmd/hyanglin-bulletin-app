@@ -454,26 +454,47 @@
           <div class="form-group"><label>주일봉사 안내 행</label><textarea id="servant_duty" rows="2" oninput="updatePreview()">예배안내(이옥희 김현정) ╻ 방송실(정선영 원종일 김진호)&#10;헌금계수(재정부) ╻ 주차(관리부 청남) ╻ 공동식사(봉사부 희여) ╻ 분리배출(희여)</textarea></div>
         </div>
 
-        <!-- 4p 공동관심사1 설정 -->
+        <!-- 4p/5p 공동관심사 통합 설정 -->
         <div id="tab-ann1" class="tab-content">
-          <h3>4페이지 (공동관심사 나눔 1)</h3>
-          <div class="form-group"><label>1. 오늘 일정 안내</label><textarea id="ann_sec1" rows="3" oninput="updatePreview()">∙ 안병무 박사 30주기 연극 〈선천댁〉 연습 : 15:00, 향우실(1층)</textarea></div>
-          <div class="form-group"><label>2. 교우 소식</label><textarea id="ann_sec2" rows="3" oninput="updatePreview()">∙ 아기 탄생(득녀) : 홍윤택/함솔이 교우 가정 (아기 이름: 홍예주)</textarea></div>
-          <div class="form-group"><label>3. 함께 만드는 향린</label><textarea id="ann_sec3" rows="10" oninput="updatePreview()">∙ 임시공동의회 공고 : 8/30(일) 예배 직후, 대예배실(2층) ※안건: 시무장로(2명) 선출의 건
+          <h3>4 & 5페이지 (공동관심사 나눔 통합 본문)</h3>
+          <div style="background:#e7f5ff; border:1px solid #74c0fc; padding:10px 12px; border-radius:6px; font-size:0.88rem; margin-bottom:12px; color:#1864ab; line-height:1.45;">
+            <strong>💡 공동관심사 작성 및 페이지 나눔 팁:</strong><br>
+            • 번호와 소식 내용을 자유롭게 쭉 입력하세요.<br>
+            • 4페이지에서 5페이지로 넘어갈 위치에 <strong style="color:#d9480f;">[페이지나눔]</strong> 태그를 입력하면, 그 지점부터 5페이지로 자동 분리 렌더링됩니다.
+          </div>
+          <div class="form-group">
+            <label>공동관심사 나눔 전체 본문 (자유 작성)</label>
+            <textarea id="ann_fullText" rows="18" oninput="updatePreview()" style="font-family:'Gowun Batang', serif; line-height:1.5; font-size:0.95rem;">1. 오늘 일정 안내
+∙ 안병무 박사 30주기 연극 〈선천댁〉 연습 : 15:00, 향우실(1층)
+
+2. 교우 소식
+∙ 아기 탄생(득녀) : 홍윤택/함솔이 교우 가정 (아기 이름: 홍예주)
+
+3. 함께 만드는 향린
+∙ 임시공동의회 공고 : 8/30(일) 예배 직후, 대예배실(2층) ※안건: 시무장로(2명) 선출의 건
 ∙ 장학헌금 : KEB 하나은행 178-910042-51004 한국기독교장로회향린교회
 ∙ 교회 장학금(상반기) 신청 : 8/16(일)~8/30(일) 오전 10시까지 신청 바랍니다. ※접수: 교회 이메일(hyanglin24@gmail.com)
 ∙ 선교부 신입부원 모집 : 9/27(일)까지 ※문의: 정상희 집사(010-9631-8150)
-∙ 안병무 박사 30주기 연극 〈선천댁〉 안내 : 출연 배우 확정 완결. 스태프 분야에서 홍보 마케팅으로 함께할 분을 찾습니다.</textarea></div>
-          <div class="form-group"><label>4. 이번주 일정 안내</label><textarea id="ann_sec4" rows="6" oninput="updatePreview()">∙ 안병무 박사 30주기 연극 〈선천댁〉 연습 : 8/20(목) 19:00, 8/23(일) 15:00
-∙ 성서배움마당 「주의 기도」 2강 “하늘과 같이” : 8/21(금) 19:30, 향우실(1층)</textarea></div>
+∙ 안병무 박사 30주기 연극 〈선천댁〉 안내 : 출연 배우 확정 완결. 스태프 분야에서 홍보 마케팅으로 함께할 분을 찾습니다.
+
+[페이지나눔]
+
+4. 이번주 일정 안내
+∙ 안병무 박사 30주기 연극 〈선천댁〉 연습 : 8/20(목) 19:00, 8/23(일) 15:00
+∙ 성서배움마당 「주의 기도」 2강 “하늘과 같이” : 8/21(금) 19:30, 향우실(1층) ※강사: 유영상 목사
+∙ 교회교육주일 예배 : 8/30(일) 11:00, 대예배실(2층)
+∙ 희년여신도회 기상읽기모임 : 8/30(일) 13:30, 세미나실(4층)
+
+5. 에큐메니칼 소식
+∙ 에큐메니칼 평화기행 : 8/16(일) 13:20 ~ 17일(월) 17:00
+∙ 향린공동체협의회 : 8/16(일) 16:00, 들꽃향린교회</textarea>
+          </div>
         </div>
 
-        <!-- 5p 공동관심사2 설정 -->
+        <!-- 5p 하단 고정 설정 -->
         <div id="tab-ann2" class="tab-content">
-          <h3>5페이지 (공동관심사 나눔 2)</h3>
-          <div class="form-group"><label>5. 이후 일정 안내</label><textarea id="ann_sec5" rows="4" oninput="updatePreview()">∙ 교회교육주일 예배 : 8/30(일) 11:00, 대예배실(2층)&#10;∙ 희년여신도회 기상읽기모임 : 8/30(일) 13:30, 세미나실(4층)</textarea></div>
-          <div class="form-group"><label>6. 에큐메니칼 소식</label><textarea id="ann_sec6" rows="5" oninput="updatePreview()">∙ 에큐메니칼 평화기행 : 8/16(일) 13:20 ~ 17일(월) 17:00&#10;∙ 향린공동체협의회 : 8/16(일) 16:00, 들꽃향린교회</textarea></div>
-          <div class="form-group"><label>7. 감사헌금 명단</label><textarea id="ann_sec7" rows="3" oninput="updatePreview()">강정구/노재열(고통에서벗어남), 나영훈(범사), 박융식(생일), 배미원, 백경배, 백승남, 신인옥, 이래현(생일), 이수웅/최영미(아들입대), 이인식, 이정자(범사), 정현정(범사), 허석헌, 장소(통일의길)</textarea></div>
+          <h3>5페이지 하단 (헌금 명단 & 실천 다짐)</h3>
+          <div class="form-group"><label>감사헌금 명단</label><textarea id="ann_sec7" rows="3" oninput="updatePreview()">강정구/노재열(고통에서벗어남), 나영훈(범사), 박융식(생일), 배미원, 백경배, 백승남, 신인옥, 이래현(생일), 이수웅/최영미(아들입대), 이인식, 이정자(범사), 정현정(범사), 허석헌, 장소(통일의길)</textarea></div>
           <div class="form-group"><label>온라인헌금 안내 문구</label><input type="text" id="ann_onlineText" value="【온라인헌금 안내】 KEB하나은행 024-22-02085-6 향린교회 (입금시 이름 / 목적 명기)" oninput="updatePreview()"></div>
           <div class="form-group"><label>교회탄소중립 문구</label><input type="text" id="ann_carbonText" value="【교회탄소중립】 7월전기 사용량 5.86MWh(전년5.91MWh) / 생산량 1.08MWh(전년1.26MWh)" oninput="updatePreview()"></div>
           <div class="form-group"><label>향린교인 생활실천 다짐 내용</label><textarea id="ann_pledgeText" rows="3" oninput="updatePreview()">6. 우리는 누구에게나 햇빛과 비를 주셔서 평등하게 사랑하시는 하나님을 믿으며, 교회와 가정, 직장 등 모든 관계에서 차별적 언어나 행위를 하지 않도록 민감하게 성찰하며 행동한다.</textarea></div>
@@ -679,41 +700,18 @@
             </table>
           </div>
 
-          <!-- 4페이지 공동관심사 1 -->
+          <!-- 4페이지 공동관심사 1 (통합 본문 1부) -->
           <div class="page page-4" id="page4">
             <div class="tab-gray-banner">
               <div class="gray-blocks"><span></span><span></span><span></span><span></span><span></span></div>
               <div class="banner-title">공동관심사 나눔</div>
             </div>
-
-            <div class="ann-section">
-              <div class="ann-title-banner">1. 오늘 일정 안내</div>
-              <div class="ann-list" id="pv-ann1"></div>
-            </div>
-            <div class="ann-section">
-              <div class="ann-title-banner">2. 교우 소식</div>
-              <div class="ann-list" id="pv-ann2"></div>
-            </div>
-            <div class="ann-section">
-              <div class="ann-title-banner">3. 함께 만드는 향린</div>
-              <div class="ann-list" id="pv-ann3"></div>
-            </div>
-            <div class="ann-section">
-              <div class="ann-title-banner">4. 이번주 일정 안내</div>
-              <div class="ann-list" id="pv-ann4"></div>
-            </div>
+            <div class="ann-full-container" id="pv-ann-page4"></div>
           </div>
 
           <!-- 5페이지 공동관심사 2 -->
           <div class="page page-5" id="page5">
-            <div class="ann-section">
-              <div class="ann-title-banner">5. 이후 일정 안내</div>
-              <div class="ann-list" id="pv-ann5"></div>
-            </div>
-            <div class="ann-section">
-              <div class="ann-title-banner">6. 에큐메니칼 소식</div>
-              <div class="ann-list" id="pv-ann6"></div>
-            </div>
+            <div class="ann-full-container" id="pv-ann-page5"></div>
             <div class="ann-section">
               <div class="ann-title-banner">7. 감사헌금</div>
               <div class="ann-list" id="pv-ann7"></div>
@@ -884,7 +882,7 @@
         'w_call', 'w_openSong', 'w_glorySong', 'w_gloryText', 'w_choirTitle', 'w_choirComposer', 'w_choirLyrics', 'w_scripture', 'w_togetherRef', 'w_togetherText',
         'w_meditationSong', 'w_meditationText', 'w_gospelRef', 'w_gospelText', 'w_sermonTitle', 'w_creedSong', 'w_thanksSong', 'w_thanksText', 'w_decisionSong', 'w_blessText',
         'servant_row1', 'servant_row2', 'servant_row3', 'servant_duty',
-        'ann_sec1', 'ann_sec2', 'ann_sec3', 'ann_sec4', 'ann_sec5', 'ann_sec6', 'ann_sec7', 'ann_onlineText', 'ann_carbonText', 'ann_pledgeText',
+        'ann_fullText', 'ann_sec1', 'ann_sec2', 'ann_sec3', 'ann_sec4', 'ann_sec5', 'ann_sec6', 'ann_sec7', 'ann_onlineText', 'ann_carbonText', 'ann_pledgeText',
         'info_servants', 'info_churches', 'info_coop', 'info_edu',
         'pray_welcome', 'pray_newCommers', 'pray_health', 'pray_military', 'pray_overseas'
       ];
@@ -964,6 +962,59 @@
         const dutyFormatted = dutyVal.replace(/\n/g, '<br>');
         html += `<tr><th style="background:#D9D9D9; font-weight:bold; vertical-align:middle; padding:3.5px 2px;">주일<br>봉사</th><td colspan="5" style="text-align:center; padding:5px 3px; line-height:1.4; white-space:normal; font-size:13.5pt; letter-spacing:-0.8px; font-family:'Gowun Batang', serif !important;">${dutyFormatted}</td></tr>`;
         tbody.innerHTML = html;
+      }
+
+      // 4p & 5p 공동관심사 나눔 [페이지나눔] 실시간 파싱 렌더링
+      const fullText = data['ann_fullText'] || [data['ann_sec1'], data['ann_sec2'], data['ann_sec3'], data['ann_sec4'], '[페이지나눔]', data['ann_sec5'], data['ann_sec6']].filter(Boolean).join('\n\n');
+      const parts = fullText.split('[페이지나눔]');
+      const p4Text = parts[0] || '';
+      const p5Text = parts.length > 1 ? parts[1] : '';
+
+      function parseAnnTextToHTML(text) {
+        if (!text.trim()) return '';
+        const lines = text.split('\n');
+        let html = '';
+        let currentSectionHtml = '';
+        let currentTitle = '';
+
+        lines.forEach(line => {
+          const trimmed = line.trim();
+          if (!trimmed) return;
+          // 숫자. 제목 형태 파싱 (예: 1. 오늘 일정 안내, 2. 교우 소식)
+          if (/^\d+\.\s*/.test(trimmed)) {
+            if (currentTitle || currentSectionHtml) {
+              html += `<div class="ann-section"><div class="ann-title-banner">${currentTitle}</div><div class="ann-list">${currentSectionHtml}</div></div>`;
+              currentSectionHtml = '';
+            }
+            currentTitle = trimmed;
+          } else {
+            // 콜론(:) 기준 소식 제목 자동 볼드(Bold) 파싱
+            let formattedLine = trimmed;
+            if (trimmed.includes(':')) {
+              const colonIdx = trimmed.indexOf(':');
+              const head = trimmed.substring(0, colonIdx).trim();
+              const tail = trimmed.substring(colonIdx);
+              formattedLine = `<strong style="font-weight:bold;">${head}</strong> ${tail}`;
+            }
+            currentSectionHtml += `<div class="ann-item">${formattedLine}</div>`;
+          }
+        });
+        if (currentTitle || currentSectionHtml) {
+          html += `<div class="ann-section">${currentTitle ? `<div class="ann-title-banner">${currentTitle}</div>` : ''}<div class="ann-list">${currentSectionHtml}</div></div>`;
+        }
+        return html;
+      }
+
+      const p4Container = document.getElementById('pv-ann-page4');
+      if (p4Container) p4Container.innerHTML = parseAnnTextToHTML(p4Text);
+
+      const p5Container = document.getElementById('pv-ann-page5');
+      if (p5Container) p5Container.innerHTML = parseAnnTextToHTML(p5Text);
+
+      // 감사헌금 명단 렌더링
+      const thanksList = document.getElementById('pv-ann7');
+      if (thanksList) {
+        thanksList.innerHTML = (data['ann_sec7'] || '').replace(/\n/g, '<br>');
       }
     }
 
