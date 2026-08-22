@@ -384,10 +384,13 @@
         <div id="tab-worship2" class="tab-content">
           <h3>3페이지 (1부 예배 연속 & 예배위원 표)</h3>
           <div class="form-group"><label>말씀묵상송</label><input type="text" id="w_meditationSong" value="국악찬송 13장" oninput="updatePreview()"></div>
+          <div class="form-group"><label>말씀묵상송 가사/부연</label><input type="text" id="w_meditationText" value="말씀을 듣고자 모였으니 주여 우리를 도우소서" oninput="updatePreview()"></div>
           <div class="form-group"><label>복음서 읽기 구절</label><input type="text" id="w_gospelRef" value="마가복음서 4:35-41" oninput="updatePreview()"></div>
+          <div class="form-group"><label>복음서 읽기 응답 대사</label><input type="text" id="w_gospelText" value="⟨읽은이 : 이것은 주님의 말씀입니다. 회중 : 그리스도를 찬양합니다.⟩" oninput="updatePreview()"></div>
           <div class="form-group"><label>하늘뜻펴기 제목</label><input type="text" id="w_sermonTitle" value="“바다 저쪽으로 건너가자”" oninput="updatePreview()"></div>
           <div class="form-group"><label>신앙고백송</label><input type="text" id="w_creedSong" value="국악찬송 254장" oninput="updatePreview()"></div>
           <div class="form-group"><label>감사송</label><input type="text" id="w_thanksSong" value="국악찬송 21장" oninput="updatePreview()"></div>
+          <div class="form-group"><label>감사송 가사/부연</label><input type="text" id="w_thanksText" value="이 기쁨과 감사로 우리 삶을 주께 드립니다" oninput="updatePreview()"></div>
           <div class="form-group"><label>결단찬송</label><input type="text" id="w_decisionSong" value="국악찬송 222장 (하나님을 믿는 자)" oninput="updatePreview()"></div>
           <div class="form-group"><label>축복기도 문구</label><textarea id="w_blessText" rows="2" oninput="updatePreview()">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘. (고린도후서 13:13)</textarea></div>
           <hr class="divider">
@@ -559,15 +562,42 @@
           <!-- 3페이지 1부 예배 연속 & 예배위원 표 -->
           <div class="page page-3" id="page3">
             <table class="worship-table">
-              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">말 씀 묵 상 송</span></td><td class="col-content" id="pv-w_meditationSong">국악찬송 13장</td></tr>
-              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">복 음 서 읽 기</span></td><td class="col-content" id="pv-w_gospelRef">마가복음서 4:35-41</td></tr>
+              <tr>
+                <td class="col-asterisk"></td>
+                <td class="col-label-cell"><span class="col-label">말 씀 묵 상 송</span></td>
+                <td class="col-content">
+                  <span id="pv-w_meditationSong">국악찬송 13장</span>
+                  <div class="worship-subtext" id="pv-w_meditationText">말씀을 듣고자 모였으니 주여 우리를 도우소서</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="col-asterisk">*</td>
+                <td class="col-label-cell"><span class="col-label">복 음 서 읽 기</span></td>
+                <td class="col-content">
+                  <span id="pv-w_gospelRef">마가복음서 4:35-41</span>
+                  <div class="worship-subtext" id="pv-w_gospelText">⟨읽은이 : 이것은 주님의 말씀입니다. 회중 : 그리스도를 찬양합니다.⟩</div>
+                </td>
+              </tr>
               <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">하 늘 뜻 펴 기</span></td><td class="col-content"><strong id="pv-w_sermonTitle">“바다 저쪽으로 건너가자”</strong></td></tr>
               <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">신 앙 고 백 송</span></td><td class="col-content" id="pv-w_creedSong">국악찬송 254장</td></tr>
-              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">감 사 송</span></td><td class="col-content" id="pv-w_thanksSong">국악찬송 21장</td></tr>
+              <tr>
+                <td class="col-asterisk">*</td>
+                <td class="col-label-cell"><span class="col-label">감 사 송</span></td>
+                <td class="col-content">
+                  <span id="pv-w_thanksSong">국악찬송 21장</span>
+                  <div class="worship-subtext" id="pv-w_thanksText">이 기쁨과 감사로 우리 삶을 주께 드립니다</div>
+                </td>
+              </tr>
               <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">감 사 기 도</span></td><td class="col-content"></td></tr>
               <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">결 단 찬 송</span></td><td class="col-content" id="pv-w_decisionSong">국악찬송 222장 (하나님을 믿는 자)</td></tr>
               <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">세 상 으 로 보 냄</span></td><td class="col-content"></td></tr>
-              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">축 복 기 도</span></td><td class="col-content" id="pv-w_blessText">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘.</td></tr>
+              <tr>
+                <td class="col-asterisk">*</td>
+                <td class="col-label-cell"><span class="col-label">축 복 기 도</span></td>
+                <td class="col-content">
+                  <div class="worship-subtext" id="pv-w_blessText" style="text-align: right; margin-top: 0;">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘. (고린도후서 13:13)</div>
+                </td>
+              </tr>
               <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">응 답 송</span></td><td class="col-content"></td></tr>
               <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">징 울 림</span></td><td class="col-content"></td></tr>
             </table>
@@ -795,7 +825,7 @@
       const fields = [
         'foundationYear', 'unificationYear', 'worshipDate', 'worshipSeason', 'worshipSeason2', 'motto1', 'motto2', 'coverSummary', 'denomText', 'churchInfoText',
         'w_call', 'w_openSong', 'w_glorySong', 'w_gloryText', 'w_choirTitle', 'w_choirComposer', 'w_choirLyrics', 'w_scripture', 'w_togetherRef', 'w_togetherText',
-        'w_meditationSong', 'w_gospelRef', 'w_sermonTitle', 'w_creedSong', 'w_thanksSong', 'w_decisionSong', 'w_blessText',
+        'w_meditationSong', 'w_meditationText', 'w_gospelRef', 'w_gospelText', 'w_sermonTitle', 'w_creedSong', 'w_thanksSong', 'w_thanksText', 'w_decisionSong', 'w_blessText',
         'servant_row1', 'servant_row2', 'servant_row3', 'servant_duty',
         'ann_sec1', 'ann_sec2', 'ann_sec3', 'ann_sec4', 'ann_sec5', 'ann_sec6', 'ann_sec7', 'ann_onlineText', 'ann_carbonText', 'ann_pledgeText',
         'info_servants', 'info_churches', 'info_coop', 'info_edu',
