@@ -734,11 +734,12 @@
       // 2. 스크롤 위치를 최상단으로 강제 고정 (좌표 어긋남 방지)
       window.scrollTo(0, 0);
 
-      const { jsPDF } = window.jspdf; // jsPDF를 html2pdf 내부가 아니라 직접 사용
+      // CDN 및 로컬 스코프 교차 호환 객체 추출
+      const jsPDFClass = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : (window.jsPDF || window.jspdf);
       const pages = document.querySelectorAll('.page'); // 8개의 .page 요소
 
       // A4 크기를 mm로 고정
-      const pdf = new jsPDF({
+      const pdf = new jsPDFClass({
         unit: 'mm',
         format: 'a4',
         orientation: 'portrait'
