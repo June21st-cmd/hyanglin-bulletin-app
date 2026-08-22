@@ -160,20 +160,26 @@
       padding: 6px 8px 6px 12px;
     }
 
-    /* 가사 및 성서 본문 부연 설명 (영광송, 찬양 가사/작곡가, 함께읽는말씀, 3p 가사/대사/기도문) 14pt 및 자간 -1.0px 적용 */
+    /* 가사 및 성서 본문 부연 설명 (영광송, 찬양 가사, 함께읽는말씀, 3p 가사/대사/기도문) 프리텐다드 및 상하 여백 확대 */
     .worship-subtext,
     .worship-table .col-content .worship-subtext,
     .worship-table .col-content .sub-text,
-    .together-text-box,
-    #pv-w_choirComposer {
+    .together-text-box {
       font-size: 14pt !important;
-      letter-spacing: -1.0px !important; /* 요청하신 자간 -1.0px 지정 */
+      letter-spacing: -1.0px !important;
       color: #000000;
-      margin-top: 4px;
+      margin-top: 7px; /* 상하 여백 확대 4px -> 7px */
+      margin-bottom: 3px;
       text-align: right;
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important; /* 프리텐다드 적용 */
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
       word-break: keep-all;
-      line-height: 1.5;
+      line-height: 1.6;
+    }
+
+    /* 찬양 작곡가 정보 (고운바탕체 15pt 유지) */
+    #pv-w_choirComposer {
+      font-size: 15pt !important;
+      font-family: 'Gowun Batang', serif !important;
     }
 
     /* 복음서 읽기 대사 전용 (우측 정렬 기반 + 읽은이/회중 시작선 정밀 일치) */
