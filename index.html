@@ -113,7 +113,7 @@
       max-width: 5mm;
       text-align: center;
       font-weight: bold;
-      font-size: 14pt;
+      font-size: 15pt; /* 15pt 적용 */
       vertical-align: top;
       padding: 4px 0;
     }
@@ -132,7 +132,7 @@
       width: 100%;
       box-sizing: border-box;
       text-align: left;
-      font-size: 14pt; /* 14pt 적용 */
+      font-size: 15pt; /* 라벨 15pt 적용 */
       font-weight: bold;
       white-space: nowrap;
       padding: 6px 8px;
@@ -141,29 +141,29 @@
       letter-spacing: -1.4px;
     }
 
-    .worship-table .col-content,
-    .worship-table .col-content * {
+    .worship-table .col-content {
       width: auto;
       vertical-align: top;
       word-break: keep-all;
       background: transparent;
-      font-size: 14pt !important; /* 내용 전체 14pt 무조건 강제 적용 */
-      font-family: 'Gowun Batang', serif !important;
-    }
-
-    .worship-table .col-content {
+      font-size: 15pt; /* 일반 내용 15pt 적용 */
+      font-family: 'Gowun Batang', serif;
       padding: 6px 8px 6px 12px;
     }
 
-    /* 부연 설명 텍스트 (가사, 본문, 작곡가 등 포함) 오른쪽 정렬 및 14pt 적용 */
+    /* 가사 및 성서 본문 부연 설명 (영광송 가사, 찬양 가사, 함께읽는말씀 본문 등) 14pt 및 좁은 자간 적용 */
     .worship-subtext,
     .worship-table .col-content .worship-subtext,
-    .worship-table .col-content .sub-text {
-      font-size: 14pt !important; /* 14pt 강력 적용 */
+    .worship-table .col-content .sub-text,
+    .together-text-box {
+      font-size: 14pt !important; /* 가사 및 본문 14pt 유지 */
+      letter-spacing: -0.5px !important; /* 가사/본문 자간 약간 좁히기 */
       color: #000000;
       margin-top: 4px;
       text-align: right;
       font-family: 'Gowun Batang', serif !important;
+      word-break: keep-all;
+      line-height: 1.5;
     }
     
     /* 교독송 악보 첨부 영역 (오른쪽으로 1cm/10mm 들여쓰기 정렬) */
@@ -204,18 +204,7 @@
       display: none !important;
     }
 
-    /* 함께읽는말씀 양쪽 긴 본문 박스 스타일 */
-    .together-text-box {
-      width: 100%;
-      font-size: 14pt !important;
-      font-family: 'Gowun Batang', serif !important;
-      color: #000000;
-      text-align: right;
-      word-break: keep-all;
-      line-height: 1.5;
-      padding-right: 8px;
-      box-sizing: border-box;
-    }
+
 
     /* 3페이지 예배위원 표 */
     .part2-header { border-bottom: 2px solid #000; padding-bottom: 4px; margin: 16px 0 10px; }
