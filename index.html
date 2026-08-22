@@ -167,6 +167,45 @@
     .poster-container-full img { width: 100%; height: 100%; object-fit: contain; }
 
     .hidden { display: none !important; }
+
+    /* ===== PDF 다운로드 / 인쇄 전용 @media print (8페이지 Exact A4 1:1 완벽 보장) ===== */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 0mm !important;
+      }
+      html, body {
+        background: white !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .app-header, .editor-panel, .preview-toolbar, .header-actions {
+        display: none !important;
+      }
+      .main-content, .preview-panel, .paper-container {
+        display: block !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+      }
+      .page {
+        width: 210mm !important;
+        height: 297mm !important;
+        min-width: 210mm !important;
+        max-width: 210mm !important;
+        min-height: 297mm !important;
+        max-height: 297mm !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 17mm 11mm 17mm 12mm !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        break-after: page !important;
+        break-inside: avoid !important;
+        box-sizing: border-box !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -234,7 +273,7 @@
           <div class="form-group"><label>찬양 핵심 가사/요약</label><textarea id="w_choirLyrics" rows="2" oninput="updatePreview()">내가 산을 향하여서 나의 눈을 들리라 나의 도움이 어디서 올꼬&#10;천지를 지으신 여호와에게서로다</textarea></div>
           <div class="form-group"><label>성서읽기</label><input type="text" id="w_scripture" value="시편 107:23-32 (886쪽), 고린도후서 1:8-11 (305쪽)" oninput="updatePreview()"></div>
           <div class="form-group"><label>함께 읽는 말씀 구절</label><input type="text" id="w_togetherRef" value="시편 107:29-31" oninput="updatePreview()"></div>
-          <div class="form-group"><label>함께 읽는 말씀 본문</label><textarea id="w_togetherText" rows="3" oninput="updatePreview()">폭풍이 잠잠해지고, 물결도 잔잔해진다.&#10;사방이 조용해지니 모두들 기뻐하고, 주님은 그들이 바라는 항구로 그들을 인도하여 주신다.&#10;주님의 인자하심을 감사하여라. 사람에게 베푸신 주님의 놀라운 구원을 감사하여라.</textarea></div>
+          <div class="form-group"><label>함께 읽는 말씀 본문</label><textarea id="w_togetherText" rows="3" oninput="updatePreview()">폭풍이 잠잠해지고, 물결도 잔잔해진다.&#10;사방이 조용해지니 모두들 기뻐하고, 주님은 그들이 바라는 항구로 그들을 인도하여 주신다.&#10;주님의 인자하심을 감사하여라. 사람에게 베푸신 주님의 놀라운 구원의 감사하여라.</textarea></div>
         </div>
 
         <!-- 3p 예배2/위원 설정 -->
@@ -428,7 +467,7 @@
             <table class="servant-table">
               <thead>
                 <tr>
-                  <th style="width:14%;">날짜</th><th style="width:17.2%;">인도</th><th style="width:17.2%;">목회기도</th><th style="width:17.2%;">성서읽기</th><th style="width:17.2%;">하늘뜻펴기</th><th style="width:17.2%;">감사기도</th>
+                  <th style="width:14%;">날짜</th><th style="width:17.2%;">인도</th><th style="width:17.2%;">목회기도</th><th style="width:17.2%;">성서읽기</th><th style="width:17.2%;">하늘뜻</th><th style="width:17.2%;">감사기도</th>
                 </tr>
               </thead>
               <tbody id="pv-servant-tbody">
@@ -552,7 +591,6 @@
   <script>
     let juboImages = { cover: '', logo: '', calli: '', sheetMusic: '', poster: '' };
 
-    // ===== IndexedDB 설정 (용량 제한 없이 대용량 이미지/데이터 자동 보관) =====
     const DB_NAME = 'HyanglinJuboDB';
     const DB_VERSION = 1;
     const STORE_NAME = 'juboDraft';
@@ -578,9 +616,7 @@
         const tx = db.transaction(STORE_NAME, 'readwrite');
         const store = tx.objectStore(STORE_NAME);
         store.put(data, 'currentDraft');
-      } catch(e) {
-        console.error('IndexedDB 저장 실패:', e);
-      }
+      } catch(e) { console.error('IndexedDB 저장 실패:', e); }
     }
 
     async function loadFromDB() {
@@ -590,18 +626,14 @@
         const store = tx.objectStore(STORE_NAME);
         const request = store.get('currentDraft');
         request.onsuccess = function() {
-          if (request.result) {
-            restoreData(request.result);
-          } else {
-            // 구 버전에 LocalStorage 데이터가 남아있는 경우 호환 유지
+          if (request.result) { restoreData(request.result); }
+          else {
             const legacy = localStorage.getItem('hyanglin_jubo_v2_data');
             if (legacy) { try { restoreData(JSON.parse(legacy)); } catch(err) {} }
             else { updatePreview(); }
           }
         };
-      } catch(e) {
-        updatePreview();
-      }
+      } catch(e) { updatePreview(); }
     }
 
     function switchTab(tabId, evt) {
@@ -631,10 +663,8 @@
         const ph = document.getElementById('pv-cover-placeholder');
         const box = document.getElementById('pv-cover-box');
         img.src = src; img.classList.remove('hidden'); ph.style.display = 'none'; box.classList.add('has-image');
-      } else if (type === 'logo') {
-        document.getElementById('pv-logo-img').src = src;
-      } else if (type === 'calli') {
-        document.getElementById('pv-calli-img').src = src;
+      } else if (type === 'logo') { document.getElementById('pv-logo-img').src = src;
+      } else if (type === 'calli') { document.getElementById('pv-calli-img').src = src;
       } else if (type === 'sheetMusic') {
         const img = document.getElementById('pv-sheet-img');
         const ph = document.getElementById('pv-sheet-placeholder');
@@ -692,59 +722,12 @@
       updatePreview();
     }
 
-    // 100% 확실한 PDF 생성 엔진: 8개 페이지 개별 캡처 후 A4 정밀 1:1 결합
-    async function downloadPDF() {
-      const btn = document.querySelector('.btn-success');
-      const origText = btn ? btn.innerHTML : '';
-      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> PDF 생성 중...';
-
-      try {
-        const pages = document.querySelectorAll('.page');
-        if (!pages || pages.length === 0) return;
-
-        // html2canvas 옵션: 스크롤 위치 및 외부 여백 무시
-        const canvasOptions = {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          scrollY: 0,
-          scrollX: 0
-        };
-
-        // 첫 번째 페이지 캡처
-        const firstCanvas = await html2canvas(pages[0], canvasOptions);
-        const imgData0 = firstCanvas.toDataURL('image/jpeg', 0.98);
-
-        // jsPDF 인스턴스 생성 (A4 단위: mm)
-        const pdf = new jspdf.jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4'
-        });
-
-        // 1페이지 추가 (A4 210mm x 297mm 꽉 채움)
-        pdf.addImage(imgData0, 'JPEG', 0, 0, 210, 297);
-
-        // 2페이지부터 8페이지까지 순차 캡처 및 추가
-        for (let i = 1; i < pages.length; i++) {
-          const canvas = await html2canvas(pages[i], canvasOptions);
-          const imgData = canvas.toDataURL('image/jpeg', 0.98);
-          pdf.addPage('a4', 'portrait');
-          pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-        }
-
-        // PDF 파일 저장
-        pdf.save(`향린교회_주보_${document.getElementById('worshipDate').value}.pdf`);
-      } catch (err) {
-        console.error('PDF 생성 에러:', err);
-        alert('PDF 생성 중 오류가 발생했습니다. 브라우저에서 인쇄(Ctrl+P) 기능을 이용해 주세요.');
-      } finally {
-        if (btn) btn.innerHTML = origText;
-      }
+    // 100% 브라우저 표준 인쇄 엔진 (PDF 저장 및 8페이지 정밀 출력 보장)
+    function downloadPDF() {
+      window.print();
     }
 
     function updatePreview() {
-      // 1페이지
       document.getElementById('pv-foundation').innerText = `창립 ${document.getElementById('foundationYear').value}주년`;
       document.getElementById('pv-unification').innerText = `통일염원 ${document.getElementById('unificationYear').value}년`;
       document.getElementById('pv-date').innerText = document.getElementById('worshipDate').value;
@@ -770,10 +753,9 @@
           </div>
         `;
       } else {
-        document.getElementById('pv-address-box').innerHTML = addrRaw.join('<br>');
+        document.getElementById('pv-address-box').innerHTML = `<div class="address-wrapper">${addrRaw.join('<br>')}</div>`;
       }
 
-      // 2페이지 & 3페이지 예배
       document.getElementById('pv-w_call').innerText = document.getElementById('w_call').value;
       document.getElementById('pv-w_openSong').innerText = document.getElementById('w_openSong').value;
       document.getElementById('pv-w_glorySong').innerText = document.getElementById('w_glorySong').value;
