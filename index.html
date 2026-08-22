@@ -172,15 +172,17 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 0mm !important;
+        margin: 0 !important; /* 상하좌우 프린터 여백 0으로 완전 제거 */
       }
       html, body {
         background: white !important;
         height: auto !important;
         overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
       .app-header, .editor-panel, .preview-toolbar, .header-actions {
-        display: none !important;
+        display: none !important; /* 에디터 패널 및 헤더 인쇄에서 완전 제외 */
       }
       .main-content, .preview-panel, .paper-container {
         display: block !important;
@@ -191,19 +193,19 @@
       }
       .page {
         width: 210mm !important;
-        height: 297mm !important;
+        height: 295mm !important; /* 297mm 대신 295mm로 안전 상한선을 두어 2장 쪼개짐 원천 차단 */
         min-width: 210mm !important;
         max-width: 210mm !important;
-        min-height: 297mm !important;
-        max-height: 297mm !important;
+        max-height: 295mm !important;
         box-shadow: none !important;
-        margin: 0 !important;
-        padding: 17mm 11mm 17mm 12mm !important;
+        margin: 0 auto !important;
+        padding: 15mm 11mm 15mm 12mm !important;
         page-break-after: always !important;
         page-break-inside: avoid !important;
         break-after: page !important;
         break-inside: avoid !important;
         box-sizing: border-box !important;
+        overflow: hidden !important;
       }
     }
   </style>
