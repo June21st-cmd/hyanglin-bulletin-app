@@ -474,12 +474,12 @@
           <h3>4 & 5페이지 (공동관심사 나눔 통합 본문)</h3>
           <div style="background:#e7f5ff; border:1px solid #74c0fc; padding:10px 12px; border-radius:6px; font-size:0.88rem; margin-bottom:12px; color:#1864ab; line-height:1.45;">
             <strong>💡 공동관심사 작성 및 페이지 나눔 팁:</strong><br>
-            • 번호와 소식 내용을 자유롭게 쭉 입력하세요.<br>
+            • 번호와 소식 내용(감사헌금 포함)을 자유롭게 쭉 입력하세요.<br>
             • 4페이지에서 5페이지로 넘어갈 위치에 <strong style="color:#d9480f;">[페이지나눔]</strong> 태그를 입력하면, 그 지점부터 5페이지로 자동 분리 렌더링됩니다.
           </div>
           <div class="form-group">
-            <label>공동관심사 나눔 전체 본문 (자유 작성)</label>
-            <textarea id="ann_fullText" rows="18" oninput="updatePreview()" style="font-family:'Gowun Batang', serif; line-height:1.5; font-size:0.95rem;">1. 오늘 일정 안내
+            <label>공동관심사 나눔 전체 본문 (감사헌금 포함 자유 작성)</label>
+            <textarea id="ann_fullText" rows="20" oninput="updatePreview()" style="font-family:'Gowun Batang', serif; line-height:1.5; font-size:0.95rem;">1. 오늘 일정 안내
 ∙ 안병무 박사 30주기 연극 〈선천댁〉 연습 : 15:00, 향우실(1층)
 
 2. 교우 소식
@@ -502,14 +502,16 @@
 
 5. 에큐메니칼 소식
 ∙ 에큐메니칼 평화기행 : 8/16(일) 13:20 ~ 17일(월) 17:00
-∙ 향린공동체협의회 : 8/16(일) 16:00, 들꽃향린교회</textarea>
+∙ 향린공동체협의회 : 8/16(일) 16:00, 들꽃향린교회
+
+6. 감사헌금
+강정구/노재열(고통에서벗어남), 나영훈(범사), 박융식(생일), 배미원, 백경배, 백승남, 신인옥, 이래현(생일), 이수웅/최영미(아들입대), 이인식, 이정자(범사), 정현정(범사), 허석헌, 장소(통일의길)</textarea>
           </div>
         </div>
 
         <!-- 5p 하단 고정 설정 -->
         <div id="tab-ann2" class="tab-content">
-          <h3>5페이지 하단 (헌금 명단 & 실천 다짐)</h3>
-          <div class="form-group"><label>감사헌금 명단</label><textarea id="ann_sec7" rows="3" oninput="updatePreview()">강정구/노재열(고통에서벗어남), 나영훈(범사), 박융식(생일), 배미원, 백경배, 백승남, 신인옥, 이래현(생일), 이수웅/최영미(아들입대), 이인식, 이정자(범사), 정현정(범사), 허석헌, 장소(통일의길)</textarea></div>
+          <h3>5페이지 하단 (안내 문구 & 실천 다짐)</h3>
           <div class="form-group"><label>온라인헌금 안내 문구</label><input type="text" id="ann_onlineText" value="【온라인헌금 안내】 KEB하나은행 024-22-02085-6 향린교회 (입금시 이름 / 목적 명기)" oninput="updatePreview()"></div>
           <div class="form-group"><label>교회탄소중립 문구</label><input type="text" id="ann_carbonText" value="【교회탄소중립】 7월전기 사용량 5.86MWh(전년5.91MWh) / 생산량 1.08MWh(전년1.26MWh)" oninput="updatePreview()"></div>
           <div class="form-group"><label>향린교인 생활실천 다짐 내용</label><textarea id="ann_pledgeText" rows="3" oninput="updatePreview()">6. 우리는 누구에게나 햇빛과 비를 주셔서 평등하게 사랑하시는 하나님을 믿으며, 교회와 가정, 직장 등 모든 관계에서 차별적 언어나 행위를 하지 않도록 민감하게 성찰하며 행동한다.</textarea></div>
@@ -727,10 +729,6 @@
           <!-- 5페이지 공동관심사 2 -->
           <div class="page page-5" id="page5">
             <div class="ann-full-container" id="pv-ann-page5"></div>
-            <div class="ann-section">
-              <div class="ann-title-banner">7. 감사헌금</div>
-              <div class="ann-list" id="pv-ann7"></div>
-            </div>
 
             <div class="black-bar" id="pv-onlineText">【온라인헌금 안내】 KEB하나은행 024-22-02085-6 향린교회</div>
             <div class="gray-bar" id="pv-carbonText">【교회탄소중립】 7월전기 사용량 5.86MWh / 생산량 1.08MWh</div>
@@ -980,7 +978,10 @@
       }
 
       // 4p & 5p 공동관심사 나눔 [페이지나눔] 실시간 파싱 렌더링
-      const fullText = data['ann_fullText'] || [data['ann_sec1'], data['ann_sec2'], data['ann_sec3'], data['ann_sec4'], '[페이지나눔]', data['ann_sec5'], data['ann_sec6']].filter(Boolean).join('\n\n');
+      let fullText = data['ann_fullText'] || [data['ann_sec1'], data['ann_sec2'], data['ann_sec3'], data['ann_sec4'], '[페이지나눔]', data['ann_sec5'], data['ann_sec6']].filter(Boolean).join('\n\n');
+      if (data['ann_sec7'] && !fullText.includes(data['ann_sec7'])) {
+        fullText += '\n\n6. 감사헌금\n' + data['ann_sec7'];
+      }
       const parts = fullText.split('[페이지나눔]');
       const p4Text = parts[0] || '';
       const p5Text = parts.length > 1 ? parts[1] : '';
@@ -1025,12 +1026,6 @@
 
       const p5Container = document.getElementById('pv-ann-page5');
       if (p5Container) p5Container.innerHTML = parseAnnTextToHTML(p5Text);
-
-      // 감사헌금 명단 렌더링
-      const thanksList = document.getElementById('pv-ann7');
-      if (thanksList) {
-        thanksList.innerHTML = (data['ann_sec7'] || '').replace(/\n/g, '<br>');
-      }
     }
 
     function restoreData(data) {
