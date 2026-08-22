@@ -160,20 +160,32 @@
       padding: 6px 8px 6px 12px;
     }
 
-    /* 프리텐다드 구역 (가사 및 성서 본문 부연 설명) 위아래 정밀 수직 균형 여백 조율 */
+    /* 프리텐다드 구역 (영광송, 찬양, 말씀묵상송, 감사송 가사 등) 윗줄 곡명과 거리 늘려 아래로 내림 */
     .worship-subtext,
     .worship-table .col-content .worship-subtext,
-    .worship-table .col-content .sub-text,
+    .worship-table .col-content .sub-text {
+      font-size: 14pt !important;
+      letter-spacing: -1.0px !important;
+      color: #000000;
+      margin-top: 14px; /* 위아래 여백 아주 약간 미세 축소 조율 (14px) */
+      margin-bottom: 2px;
+      text-align: right;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
+      word-break: keep-all;
+      line-height: 1.3 !important;
+    }
+
+    /* 함께읽는말씀 본문 전용 (위로 끌어올림) */
     .together-text-box {
       font-size: 14pt !important;
       letter-spacing: -1.0px !important;
       color: #000000;
-      margin-top: 8px; /* 위칸 텍스트와의 시각적 간격 보정 (7px -> 8px) */
-      margin-bottom: 4px;
+      margin-top: 6px; /* 본문 제목과의 사이에 약간의 여백 부여 (6px) */
+      margin-bottom: 6px;
       text-align: right;
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
       word-break: keep-all;
-      line-height: 1.3 !important; /* 문장 내부 줄간격 촘촘하게 축소 (1.6 -> 1.3) */
+      line-height: 1.3 !important;
     }
 
     /* 찬양 작곡가 정보 (고운바탕체 15pt 유지) */
@@ -182,13 +194,15 @@
       font-family: 'Gowun Batang', serif !important;
     }
 
-    /* 복음서 읽기 대사 전용 (우측 정렬 기반 + 읽은이/회중 시작선 정밀 일치 + 프리텐다드 서체) */
+    /* 복음서 읽기 대사 전용 (우측 정렬 기반 + 읽은이/회중 시작선 정밀 일치 + 프리텐다드 서체 + 상하 미세 여백) */
     #pv-w_gospelText {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
       text-align: right !important;
       display: inline-block;
       width: 100%;
       line-height: 1.3 !important;
+      margin-top: 10px !important; /* 상하 여백 아주 미세 축소 */
+      margin-bottom: 1px !important;
     }
     #pv-w_gospelText * {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
@@ -244,29 +258,34 @@
 
 
 
-    /* 3페이지 예배위원 표 */
-    .part2-header { border-bottom: 2px solid #000; padding-bottom: 4px; margin: 16px 0 10px; }
-    .part2-header h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: underline; }
-    .servant-section-title { text-align: center; font-size: 14pt; font-weight: bold; margin: 12px 0 8px; }
+    /* 3페이지 2부 검은색 띠 헤더 (징 울림과의 간격 절반 7mm 조정) */
+    .section-header-black-container { border-bottom: 2px solid #000; padding-bottom: 4px; margin-top: 7mm; margin-bottom: 4px; }
+    .section-header-black { display: flex; justify-content: space-between; align-items: flex-end; }
+    .section-header-black h3 { font-size: 21pt; color: #000000; font-weight: bold; text-decoration: none; font-family: 'Gowun Batang', serif !important; margin: 0; }
+    .section-header-black h3 span.sub,
+    .section-header-black h3 span.sub * { font-size: 17pt; color: #000000; text-decoration: none; font-weight: normal; margin-left: 4px; font-family: 'Gowun Batang', serif !important; }
+
+    /* 3페이지 예배위원 표 (폰트크기 15pt 지정 및 위아래 여백 축소) */
+    .servant-section-title { text-align: center; font-size: 15pt !important; font-weight: bold; margin: 6px 0 4px; font-family: 'Gowun Batang', serif !important; }
     
-    .servant-table { width: 100%; border-collapse: collapse; font-size: 13pt; text-align: center; margin-bottom: 12px; table-layout: fixed; }
-    .servant-table th, .servant-table td { border: 0.12mm solid #000000; padding: 6px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.5px; }
+    .servant-table { width: 100%; border-collapse: collapse; font-size: 15pt !important; text-align: center; margin-bottom: 12px; table-layout: fixed; font-family: 'Gowun Batang', serif !important; }
+    .servant-table th, .servant-table td { border: 0.12mm solid #000000; padding: 3.5px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.5px; font-family: 'Gowun Batang', serif !important; }
     .servant-table th { background: #D9D9D9; font-weight: bold; }
     
     /* 주일봉사 독립 텍스트 블록 */
-    .servant-duty-block { font-size: 13.5pt; line-height: 1.6; margin-top: 8px; padding: 6px 4px; letter-spacing: -0.3px; word-break: keep-all; }
+    .servant-duty-block { font-size: 14pt; line-height: 1.6; margin-top: 8px; padding: 6px 4px; letter-spacing: -0.3px; word-break: keep-all; font-family: 'Gowun Batang', serif !important; }
     .servant-duty-block strong { font-weight: bold; }
 
     /* 4페이지 & 5페이지 공동관심사 */
     .tab-gray-banner { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 14px; }
-    .gray-blocks { display: flex; height: 10mm; }
+    .gray-blocks { display: flex; height: 11mm; }
     .gray-blocks span { width: 12mm; height: 100%; }
     .gray-blocks span:nth-child(1) { background: #e9ecef; }
     .gray-blocks span:nth-child(2) { background: #ced4da; }
     .gray-blocks span:nth-child(3) { background: #adb5bd; }
     .gray-blocks span:nth-child(4) { background: #6c757d; }
     .gray-blocks span:nth-child(5) { background: #343a40; }
-    .banner-title { background: #000000; color: #FFFFFF; font-size: 16pt; font-weight: bold; padding: 4px 20px; height: 10mm; display: flex; align-items: center; }
+    .banner-title { background: #000000; color: #FFFFFF; font-size: 20pt !important; font-weight: bold; padding: 4px 20px; height: 11mm; display: flex; align-items: center; font-family: 'Gowun Batang', serif !important; }
     
     .ann-section { margin-bottom: 12px; }
     .ann-title-banner { background: #000000; color: #FFFFFF; padding: 2px 10px; font-size: 14pt; font-weight: bold; display: inline-block; margin-bottom: 6px; }
@@ -424,11 +443,15 @@
           <div class="form-group"><label>결단찬송</label><input type="text" id="w_decisionSong" value="국악찬송 222장 (하나님을 믿는 자)" oninput="updatePreview()"></div>
           <div class="form-group"><label>축복기도 문구</label><textarea id="w_blessText" rows="2" oninput="updatePreview()">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘. (고린도후서 13:13)</textarea></div>
           <hr class="divider">
+          <div class="form-group row">
+            <div class="col"><label>2부 예배 제목</label><input type="text" id="worship2Title" value="2부∶그리스도인의 사귐" oninput="updatePreview()"></div>
+            <div class="col"><label>2부 부연/소제목</label><input type="text" id="worship2Season" value="공동관심사 나눔" oninput="updatePreview()"></div>
+          </div>
           <h4>예배위원 / 봉사자 안내 표</h4>
-          <div class="form-group"><label>1주차 (날짜 | 인도 | 목회기도 | 성서읽기 | 하늘뜻 | 감사기도)</label><input type="text" id="servant_row1" value="08/16 | 최필수 장로 | 김기수 장로 | 정현정 교우 | 한문덕 목사 | 박융식 교우" oninput="updatePreview()"></div>
-          <div class="form-group"><label>2주차</label><input type="text" id="servant_row2" value="08/23 | 최필수 장로 | 피경원 장로 | 정원혁 교우 | 한문덕 목사 | 김경민 집사" oninput="updatePreview()"></div>
-          <div class="form-group"><label>3주차</label><input type="text" id="servant_row3" value="08/30 | 김기수 장로 | 하상우 집사 | 곽이안 어린이 | 유영상 목사 | 김이도 푸른이" oninput="updatePreview()"></div>
-          <div class="form-group"><label>주일봉사 안내 행</label><textarea id="servant_duty" rows="2" oninput="updatePreview()">예배안내(이옥희 김현정) ╻ 방송실(신동준 연명흠 김진호)&#10;헌금계수(재정부) ╻ 주차(관리부 청남) ╻ 공동식사(봉사부 희여) ╻ 분리배출(희여)</textarea></div>
+          <div class="form-group"><label>1주차 (날짜 | 인도 | 목회기도 | 성서읽기 | 하늘뜻 | 감사기도)</label><input type="text" id="servant_row1" value="08/23 | 최필수 장로 | 피경원 장로 | 정원혁 교우 | 한문덕 목사 | 김경민 집사" oninput="updatePreview()"></div>
+          <div class="form-group"><label>2주차</label><input type="text" id="servant_row2" value="08/30 | 김기수 장로 | 하상우 집사 | 곽이안 어린이 | 유영상 목사 | 김이도 푸른이" oninput="updatePreview()"></div>
+          <div class="form-group"><label>3주차 (병합 시: 날짜 | 이벤트명)</label><input type="text" id="servant_row3" value="09/06 | 남신도주일 예배" oninput="updatePreview()"></div>
+          <div class="form-group"><label>주일봉사 안내 행</label><textarea id="servant_duty" rows="2" oninput="updatePreview()">예배안내(이옥희 김현정) ╻ 방송실(정선영 원종일 김진호)&#10;헌금계수(재정부) ╻ 주차(관리부 청남) ╻ 공동식사(봉사부 희여) ╻ 분리배출(희여)</textarea></div>
         </div>
 
         <!-- 4p 공동관심사1 설정 -->
@@ -572,7 +595,7 @@
                 <td class="col-label-cell"><span class="col-label">찬 양</span></td>
                 <td class="col-content">
                   <strong id="pv-w_choirTitle">“내가 산을 향하여”</strong> <span id="pv-w_choirComposer" style="color:#444;">(글: Joseph M. Martin, 곡: Joseph M. Martin & David Angerman)</span>
-                  <div class="worship-subtext" id="pv-w_choirLyrics" style="margin-top:4px;">내가 산을 향하여서 나의 눈을 들리라 나의 도움이 어디서 올꼬<br>천지를 지으신 여호와에게서로다</div>
+                  <div class="worship-subtext" id="pv-w_choirLyrics">내가 산을 향하여서 나의 눈을 들리라 나의 도움이 어디서 올꼬<br>천지를 지으신 여호와에게서로다</div>
                 </td>
               </tr>
               <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">성 서 읽 기</span></td><td class="col-content" id="pv-w_scripture">시편 107:23-32 (886쪽), 고린도후서 1:8-11 (305쪽)</td></tr>
@@ -632,24 +655,28 @@
               <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">징 울 림</span></td><td class="col-content"></td></tr>
             </table>
 
-            <div class="part2-header">
-              <h3>2부∶그리스도인의 사귐 <span class="sub">(공동관심사 나눔)</span></h3>
+            <div class="section-header-black-container">
+              <div class="section-header-black">
+                <h3><span id="pv-worship2Title">2부∶그리스도인의 사귐</span> <span class="sub" id="pv-worshipSeasonHeader3">(공동관심사 나눔)</span></h3>
+              </div>
             </div>
 
             <div class="servant-section-title">&lt; 예배위원 / 봉사자 안내 &gt;</div>
             <table class="servant-table">
               <thead>
                 <tr>
-                  <th style="width:14%;">날짜</th><th style="width:17.2%;">인도</th><th style="width:17.2%;">목회기도</th><th style="width:17.2%;">성서읽기</th><th style="width:17.2%;">하늘뜻</th><th style="width:17.2%;">감사기도</th>
+                  <th style="width:13%;">날짜</th>
+                  <th style="width:17.4%;">인  도</th>
+                  <th style="width:17.4%;">목회기도</th>
+                  <th style="width:17.4%;">성서읽기</th>
+                  <th style="width:17.4%;">하늘뜻펴기</th>
+                  <th style="width:17.4%;">감사기도</th>
                 </tr>
               </thead>
               <tbody id="pv-servant-tbody">
-                <!-- JS 갱신 -->
+                <!-- JS 동적 렌더링 -->
               </tbody>
             </table>
-            <div class="servant-duty-block" id="pv-servant-duty-block">
-              <!-- JS 갱신 -->
-            </div>
           </div>
 
           <!-- 4페이지 공동관심사 1 -->
@@ -853,7 +880,7 @@
 
     function getFormData() {
       const fields = [
-        'foundationYear', 'unificationYear', 'worshipDate', 'worshipSeason', 'worshipSeason2', 'motto1', 'motto2', 'coverSummary', 'denomText', 'churchInfoText',
+        'foundationYear', 'unificationYear', 'worshipDate', 'worshipSeason', 'worshipSeason2', 'worship2Title', 'worship2Season', 'motto1', 'motto2', 'coverSummary', 'denomText', 'churchInfoText',
         'w_call', 'w_openSong', 'w_glorySong', 'w_gloryText', 'w_choirTitle', 'w_choirComposer', 'w_choirLyrics', 'w_scripture', 'w_togetherRef', 'w_togetherText',
         'w_meditationSong', 'w_meditationText', 'w_gospelRef', 'w_gospelText', 'w_sermonTitle', 'w_creedSong', 'w_thanksSong', 'w_thanksText', 'w_decisionSong', 'w_blessText',
         'servant_row1', 'servant_row2', 'servant_row3', 'servant_duty',
@@ -906,11 +933,37 @@
           }
         }
       });
-      // 2페이지 절기 헤더 괄호+문구 단일 바인딩 (여는 괄호 유격 원천 차단)
+      // 2, 3페이지 헤더 괄호+문구 단일 바인딩 (여는 괄호 유격 원천 차단)
       const seasonHeader = document.getElementById('pv-worshipSeasonHeader');
       const seasonVal = data['worshipSeason2'] || data['worshipSeason'];
       if (seasonHeader && seasonVal) {
         seasonHeader.innerText = `(${seasonVal.trim()})`;
+      }
+      const seasonHeader3 = document.getElementById('pv-worshipSeasonHeader3');
+      const seasonVal3 = data['worship2Season'] || '공동관심사 나눔';
+      if (seasonHeader3 && seasonVal3) {
+        seasonHeader3.innerText = `(${seasonVal3.trim()})`;
+      }
+
+      // 3페이지 예배위원 표 & 주일봉사 5행 통합 렌더링 (캡처본 100% 동일)
+      const tbody = document.getElementById('pv-servant-tbody');
+      if (tbody) {
+        let html = '';
+        ['servant_row1', 'servant_row2', 'servant_row3'].forEach(id => {
+          const rowVal = data[id] || '';
+          if (rowVal.trim()) {
+            const cols = rowVal.split('|').map(s => s.trim());
+            if (cols.length === 2) {
+              html += `<tr><td>${cols[0]}</td><td colspan="5" style="text-align:center; font-weight:normal;">${cols[1]}</td></tr>`;
+            } else {
+              html += `<tr>${cols.map(c => `<td>${c}</td>`).join('')}</tr>`;
+            }
+          }
+        });
+        const dutyVal = data['servant_duty'] || '';
+        const dutyFormatted = dutyVal.replace(/\n/g, '<br>');
+        html += `<tr><th style="background:#D9D9D9; font-weight:bold; vertical-align:middle; padding:3.5px 2px;">주일<br>봉사</th><td colspan="5" style="text-align:center; padding:5px 3px; line-height:1.4; white-space:normal; font-size:13.5pt; letter-spacing:-0.8px; font-family:'Gowun Batang', serif !important;">${dutyFormatted}</td></tr>`;
+        tbody.innerHTML = html;
       }
     }
 
