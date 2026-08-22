@@ -808,6 +808,25 @@
       reader.readAsText(file);
     }
 
+    function updatePreview() {
+      const data = getFormData();
+      Object.keys(data).forEach(id => {
+        if (id === 'images') return;
+        const val = data[id] || '';
+        const pvEl = document.getElementById(`pv-${id}`);
+        if (pvEl) {
+          if (id.startsWith('ann_') && id !== 'ann_onlineText' && id !== 'ann_carbonText' && id !== 'ann_pledgeText') {
+            pvEl.innerHTML = val.replace(/\n/g, '<br>');
+          } else {
+            pvEl.innerText = val;
+          }
+        }
+      });
+      // 1페이지 절기 서체 바인딩
+      const seasonSub = document.querySelector('.pv-season-sub');
+      if (seasonSub && data['worshipSeason']) seasonSub.innerText = data['worshipSeason'];
+    }
+
     function restoreData(data) {
       if (!data) return;
       Object.keys(data).forEach(key => {
@@ -868,6 +887,16 @@
     }
 
     window.onload = function() {
+      document.querySelectorAll('.editor-panel input, .editor-panel textarea').forEach(el => {
+        el.addEventListener('input', () => {
+          updatePreview();
+          autoSaveToDB();
+        });
+        el.addEventListener('change', () => {
+          updatePreview();
+          autoSaveToDB();
+        });
+      });
       loadFromDB();
     };
   </script>
