@@ -524,7 +524,7 @@
           <h3>6페이지 (향린 정보)</h3>
           <div class="form-group"><label>향린을 섬기는 사람들</label><textarea id="info_servants" rows="6" oninput="updatePreview()">· 담임목사 : 한문덕
 · 시무장로 : 강은성 김기수 김정미 나현대 이은경 채운석 최필수 피경원
-· 부 목 사 : 김지목(관리) 이민하(행정) 유영상(교육부, 청년회)
+· 부  목  사 : 김지목(관리) 이민하(행정) 유영상(교육부, 청년회)
 · 교육전도사 : 이휘석(유아·유치부) 임유진(어린이부) 이동훈(청소년부)
 · 미디어 담당목사 : 이원혁 / 음향 : 이태원
 · 직    원 : 최미정(사무행정)</textarea></div>
@@ -949,6 +949,20 @@
             } else {
               pvEl.innerHTML = val.replace(/\n/g, '<br>');
             }
+          } else if (id === 'info_servants') {
+            const lines = val.split('\n');
+            const formattedLines = lines.map(line => {
+              const trimmed = line.trim();
+              if (!trimmed) return '';
+              if (trimmed.includes(':')) {
+                const colonIdx = trimmed.indexOf(':');
+                const head = trimmed.substring(0, colonIdx).trim();
+                const tail = trimmed.substring(colonIdx + 1).trim();
+                return `<div style="display:flex; align-items:baseline; line-height:1.45; margin-bottom:2px;"><span style="white-space:nowrap; display:inline-block; min-width:148px; flex-shrink:0;">${head} :</span><span style="flex:1; word-break:keep-all;">${tail}</span></div>`;
+              }
+              return `<div style="margin-bottom:2px;">${trimmed}</div>`;
+            });
+            pvEl.innerHTML = formattedLines.join('');
           } else if (id === 'churchInfoText') {
             const lines = val.split('\n');
             const formattedLines = lines.map(line => {
