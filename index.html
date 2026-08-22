@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Batang&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- html2canvas & jsPDF 개별 로드 (전역 window.html2canvas, window.jspdf 보장) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
       --primary-color: #FF0000;
@@ -723,9 +726,52 @@
       updatePreview();
     }
 
-    // 100% 브라우저 표준 인쇄 엔진 (PDF 저장 및 8페이지 정밀 출력 보장)
-    function downloadPDF() {
-      window.print();
+    // 100% exact downloadPDF logic requested by user
+    async function downloadPDF() {
+      // 1. 폰트 로딩 보장
+      await document.fonts.ready;
+
+      // 2. 스크롤 위치를 최상단으로 강제 고정 (좌표 어긋남 방지)
+      window.scrollTo(0, 0);
+
+      const { jsPDF } = window.jspdf; // jsPDF를 html2pdf 내부가 아니라 직접 사용
+      const pages = document.querySelectorAll('.page'); // 8개의 .page 요소
+
+      // A4 크기를 mm로 고정
+      const pdf = new jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      });
+
+      const pdfWidth = 210;
+      const pdfHeight = 297;
+
+      for (let i = 0; i < pages.length; i++) {
+        const page = pages[i];
+
+        // 각 페이지를 개별적으로 캡처. scrollY를 0으로 고정해서 좌표 어긋남 방지.
+        const canvas = await html2canvas(page, {
+          scale: 3, // 해상도. 2~3 권장
+          useCORS: true,
+          scrollX: 0,
+          scrollY: -window.scrollY, // 현재 스크롤 오프셋 상쇄
+          windowWidth: document.documentElement.scrollWidth,
+          windowHeight: document.documentElement.scrollHeight,
+          backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.98);
+
+        // 캔버스 비율을 A4 비율(210:297)에 정확히 맞춰서 삽입
+        // .page의 실제 mm 크기(210mm x 297mm)와 동일하게 강제 지정
+        if (i > 0) {
+          pdf.addPage();
+        }
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+      }
+
+      pdf.save('향린교회_주보.pdf');
     }
 
     function updatePreview() {
