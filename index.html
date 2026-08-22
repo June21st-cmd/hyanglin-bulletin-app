@@ -90,11 +90,8 @@
     .brand-denom-text { font-size: 16pt; font-weight: bold; line-height: 1.4; color: #FF0000; text-align: center; letter-spacing: 3px; font-family: 'Noto Sans KR', sans-serif; white-space: pre-line; min-width: 120px; }
     .brand-calli-img { height: 21mm !important; width: auto; object-fit: contain; }
     
-    /* 교회 정보: 14pt 지정 */
-    .footer-bottom-address { font-size: 14pt; text-align: center; line-height: 1.5; color: #000; font-family: 'Gowun Batang', serif; width: 100%; letter-spacing: -0.4px; display: flex; flex-direction: column; align-items: center; }
-    .address-wrapper { display: inline-block; width: 100%; max-width: 520px; } /* 14pt 수용 너비 확장 */
-    .address-row { text-align: center; margin-bottom: 2px; white-space: nowrap; }
-    .address-split-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+    /* 교회 정보: 14pt 지정, 가운데 정렬 & 스페이스 공백 보존 */
+    .footer-bottom-address { font-size: 14pt; text-align: center; line-height: 1.5; color: #000; font-family: 'Gowun Batang', serif; width: 100%; letter-spacing: -0.4px; white-space: pre-wrap; word-break: keep-all; }
 
     /* 2페이지 & 3페이지 예배 헤더 및 * 안내문 순서 보정 */
     .page-2, .page-2 *,
@@ -584,13 +581,7 @@
                 <div class="brand-denom-text" id="pv-denomText">한 국 기 독 교<br>장   로   회</div>
                 <img id="pv-calli-img" src="" alt="향린교회 캘리" class="brand-calli-img">
               </div>
-              <div class="footer-bottom-address" id="pv-address-box">
-                <div class="address-wrapper">
-                  <div class="address-row" id="pv-address-line1">주소 : 서울시 종로구 경희궁2길 11 (내수동 110-5)</div>
-                  <div class="address-split-row"><span>http://www.hyanglin.org</span><span>hyanglin24@gmail.com</span></div>
-                  <div class="address-split-row"><span>전화: 776-3806, 9141</span><span>전송: 776-2761</span></div>
-                </div>
-              </div>
+              <div class="footer-bottom-address" id="pv-churchInfoText"></div>
             </div>
           </div>
 
