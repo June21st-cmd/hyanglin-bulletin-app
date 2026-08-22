@@ -932,10 +932,10 @@
           } else if (id === 'churchInfoText') {
             const lines = val.split('\n');
             const formattedLines = lines.map(line => {
-              if (line.includes('hyanglin.org') || line.includes('gmail.com') || line.includes('http')) {
-                return `<div style="letter-spacing: -1.2px; text-align: center; white-space: pre-wrap;">${line}</div>`;
+              if (line.includes('주소')) {
+                return `<div style="letter-spacing: 0.8px; text-align: center; white-space: pre-wrap;">${line}</div>`;
               }
-              return `<div style="text-align: center; white-space: pre-wrap;">${line}</div>`;
+              return `<div style="letter-spacing: -0.4px; text-align: center; white-space: pre-wrap;">${line}</div>`;
             });
             pvEl.innerHTML = formattedLines.join('');
           } else if (isMultiline && id !== 'ann_onlineText' && id !== 'ann_carbonText') {
