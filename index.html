@@ -64,7 +64,7 @@
 
     /* 1페이지 표지 */
     .page-1 .page1-header-line { font-size: 15.5pt; font-weight: bold; text-align: left; border-bottom: 0.3mm solid #000; padding-bottom: 3px; margin-bottom: 4px; height: 8mm; }
-    .page-1 .page1-season-line { color: #FF0000; font-size: 17pt; font-weight: bold; text-align: right; margin-bottom: 8px; height: 9mm; }
+    .page-1 .page1-season-line { color: #FF0000; font-size: 17pt; font-weight: bold; text-align: right; margin-bottom: 8px; height: 9mm; font-family: 'Gowun Batang', 'Batang', serif; }
     .motto-box { margin: 8px 0 6px; text-align: center; height: 30mm; display: flex; flex-direction: column; justify-content: center; }
     .motto-box h2 { color: #FF0000; font-size: 32pt; font-weight: 900; letter-spacing: 2px; line-height: 1.25; font-family: 'Gowun Batang', serif; }
     
@@ -76,18 +76,18 @@
     .cover-img-fit { width: 100% !important; height: 100% !important; object-fit: contain !important; display: block; margin: 0 auto; }
     .cover-placeholder-text { text-align: center; color: #adb5bd; font-size: 0.95rem; font-family: 'Noto Sans KR', sans-serif; line-height: 1.5; }
     
-    /* 대문 사진 설명 */
+    /* 대문 사진 설명 (font-family: 'Gowun Batang', serif) */
     .cover-summary-centered { font-size: 13pt; font-family: 'Gowun Batang', serif; text-align: center; line-height: 1.6; margin: 6px 0 10px; color: #000; letter-spacing: -0.5px; height: 16mm; display: flex; align-items: center; justify-content: center; }
 
     .church-footer-stacked { display: flex; flex-direction: column; align-items: center; width: 100%; position: absolute; bottom: 17mm; left: 12mm; right: 11mm; width: calc(100% - 23mm); }
     .footer-top-brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; height: 30mm; }
     .brand-logo-img { height: 28mm !important; width: auto; object-fit: contain; }
     
-    /* 교단명 ("한국기독교장로회") */
-    .brand-denom-text { font-size: 16pt; font-weight: bold; line-height: 1.4; color: #FF0000; text-align: center; letter-spacing: 3px; font-family: 'Gowun Batang', serif; white-space: pre-line; min-width: 120px; }
+    /* 교단명: .page1-season-line과 동일한 font-family: 'Gowun Batang', 'Batang', serif 지정 */
+    .brand-denom-text { font-size: 16pt; font-weight: bold; line-height: 1.4; color: #FF0000; text-align: center; letter-spacing: 3px; font-family: 'Gowun Batang', 'Batang', serif; white-space: pre-line; min-width: 120px; }
     .brand-calli-img { height: 21mm !important; width: auto; object-fit: contain; }
     
-    /* 교회 정보 */
+    /* 교회 정보: .cover-summary-centered와 동일한 font-family: 'Gowun Batang', serif 지정 */
     .footer-bottom-address { font-size: 11.5pt; text-align: center; line-height: 1.5; color: #000; font-family: 'Gowun Batang', serif; width: 100%; letter-spacing: -0.4px; display: flex; flex-direction: column; align-items: center; }
     .address-wrapper { display: inline-block; width: 100%; max-width: 440px; } /* 첫째 줄 주소 폭에 맞춘 너비 제한 */
     .address-row { text-align: center; margin-bottom: 2px; white-space: nowrap; }
