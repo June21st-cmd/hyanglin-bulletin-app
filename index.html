@@ -296,11 +296,11 @@
     .pledge-title { text-align: center; font-weight: bold; font-size: 14pt; margin-bottom: 6px; }
     .pledge-text { font-size: 14pt; line-height: 1.5; }
 
-    /* 6페이지 향린 정보 */
-    .page-6 { display: flex; flex-direction: column; gap: 14px; }
-    .outer-border-box { border: 0.12mm solid #000000; padding: 12px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; }
-    .outer-border-box h4 { font-size: 15pt; font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid #000; padding-bottom: 2px; color: #000; font-family: 'Gowun Batang', serif !important; }
-    .info-list-text { font-size: 13.5pt; line-height: 1.5; white-space: pre-wrap; font-family: 'Gowun Batang', serif !important; }
+    /* 6페이지 향린 정보 (A4 세로 전체 100% 꽉 차게 정율 분배) */
+    .page-6 { display: flex; flex-direction: column; gap: 14px; height: 100%; box-sizing: border-box; }
+    .outer-border-box { border: 0.12mm solid #000000; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-around; flex: 1; }
+    .outer-border-box h4 { font-size: 16.5pt; font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid #000; padding-bottom: 3px; color: #000; font-family: 'Gowun Batang', serif !important; }
+    .info-list-text { font-size: 14pt; line-height: 1.6; white-space: pre-wrap; font-family: 'Gowun Batang', serif !important; letter-spacing: -0.3px; }
 
     /* 7페이지 기도나눔 */
     .prayer-banner-red { color: #FF0000; text-align: center; font-size: 17pt; font-weight: bold; margin: 14px 0 10px; letter-spacing: 1px; }
