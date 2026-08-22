@@ -103,33 +103,46 @@
     /* 검은 구분선 '아래' 우측 정렬 * 표는 일어남 */
     .header-asterisk-subrow { text-align: right; font-size: 11.5pt; color: #000; font-weight: 500; margin-top: 4px; margin-bottom: 6px; font-family: 'Noto Sans KR', sans-serif; }
 
-    /* 2페이지 & 3페이지 예배 순서 표 (별표 영역 분리 + 38mm 회색 블록 고정) */
+    /* 2페이지 & 3페이지 예배 순서 표 (3칸 테이블 구조: 별표/회색 1줄 라벨/내용) */
     .worship-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; }
     .worship-table tr { border-bottom: none; }
-    .worship-table td { vertical-align: top; font-size: 15.5pt; line-height: 1.5; padding: 2px 0; }
     
-    /* 38mm 회색 배경 블록 (왼쪽 정렬, 하단 흰색 구분선) */
-    .worship-table .col-label {
+    .worship-table .col-asterisk {
+      width: 5mm;
+      min-width: 5mm;
+      max-width: 5mm;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14pt;
+      vertical-align: top;
+      padding: 4px 0;
+    }
+
+    .worship-table .col-label-cell {
       width: 38mm;
       min-width: 38mm;
       max-width: 38mm;
-      background: #D9D9D9;
-      border-radius: 0;
-      border-bottom: 1px solid #FFFFFF;
-      font-size: 14pt;
-      font-weight: bold;
-      text-align: left;
-      white-space: nowrap;
-      padding: 4px 8px;
-      box-sizing: border-box;
+      vertical-align: top;
+      padding: 0;
     }
 
-    /* 내용 영역 (남은 폭 전체) */
+    .worship-table .col-label {
+      display: inline-block;
+      background: #D9D9D9;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+      font-size: 14pt;
+      font-weight: bold;
+      white-space: nowrap;
+      padding: 4px 8px;
+    }
+
     .worship-table .col-content {
       width: auto;
+      vertical-align: top;
       word-break: keep-all;
       padding: 4px 8px 4px 12px;
-      border-bottom: none;
       background: transparent;
     }
 
@@ -437,11 +450,12 @@
             </div>
             <div class="header-asterisk-subrow">* 표는 일어남</div>
             <table class="worship-table">
-              <tr><td class="col-label">징 울 림</td><td class="col-content"></td></tr>
-              <tr><td class="col-label">예 배 부 름</td><td class="col-content" id="pv-w_call">시편 67:4-5</td></tr>
-              <tr><td class="col-label">* 여 는 찬 송</td><td class="col-content" id="pv-w_openSong">찬송 324장 (예수 나를 오라 하네)</td></tr>
+              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">징 울 림</span></td><td class="col-content"></td></tr>
+              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">예 배 부 름</span></td><td class="col-content" id="pv-w_call">시편 67:4-5</td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">여 는 찬 송</span></td><td class="col-content" id="pv-w_openSong">찬송 324장 (예수 나를 오라 하네)</td></tr>
               <tr>
-                <td class="col-label">* 교 독 송</td>
+                <td class="col-asterisk">*</td>
+                <td class="col-label-cell"><span class="col-label">교 독 송</span></td>
                 <td class="col-content">
                   <div class="sheet-music-box" id="pv-sheet-box">
                     <span id="pv-sheet-placeholder" style="font-size:0.9rem; color:#888;">교독송 악보 이미지 업로드 영역</span>
@@ -450,24 +464,27 @@
                 </td>
               </tr>
               <tr>
-                <td class="col-label">* 영 광 송</td>
+                <td class="col-asterisk">*</td>
+                <td class="col-label-cell"><span class="col-label">영 광 송</span></td>
                 <td class="col-content">
                   <span id="pv-w_glorySong">국악찬송 5장</span>
                   <div class="worship-subtext" id="pv-w_gloryText">성부 성자와 성령 영원히 영광 받으소서 태초부터 지금까지 영광 영광 아멘</div>
                 </td>
               </tr>
-              <tr><td class="col-label">목 회 기 도</td><td class="col-content"></td></tr>
-              <tr><td class="col-label">기 도 송</td><td class="col-content"></td></tr>
+              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">목 회 기 도</span></td><td class="col-content"></td></tr>
+              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">기 도 송</span></td><td class="col-content"></td></tr>
               <tr>
-                <td class="col-label">찬 양</td>
+                <td class="col-asterisk"></td>
+                <td class="col-label-cell"><span class="col-label">찬 양</span></td>
                 <td class="col-content">
                   <strong id="pv-w_choirTitle">“내가 산을 향하여”</strong> <span id="pv-w_choirComposer" style="font-size:12pt; color:#444;">(글: Joseph M. Martin, 곡: Joseph M. Martin & David Angerman)</span>
                   <div class="worship-subtext" id="pv-w_choirLyrics" style="margin-top:4px;">내가 산을 향하여서 나의 눈을 들리라 나의 도움이 어디서 올꼬<br>천지를 지으신 여호와에게서로다</div>
                 </td>
               </tr>
-              <tr><td class="col-label">성 서 읽 기</td><td class="col-content" id="pv-w_scripture">시편 107:23-32 (886쪽), 고린도후서 1:8-11 (305쪽)</td></tr>
+              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">성 서 읽 기</span></td><td class="col-content" id="pv-w_scripture">시편 107:23-32 (886쪽), 고린도후서 1:8-11 (305쪽)</td></tr>
               <tr>
-                <td class="col-label">함 께 읽 는 말 씀</td>
+                <td class="col-asterisk"></td>
+                <td class="col-label-cell"><span class="col-label">함 께 읽 는 말 씀</span></td>
                 <td class="col-content">
                   <span id="pv-w_togetherRef">시편 107:29-31</span>
                   <div class="worship-subtext" id="pv-w_togetherText" style="margin-top:4px;">폭풍이 잠잠해지고, 물결도 잔잔해진다.</div>
@@ -479,17 +496,17 @@
           <!-- 3페이지 1부 예배 연속 & 예배위원 표 -->
           <div class="page page-3" id="page3">
             <table class="worship-table">
-              <tr><td class="col-label">말 씀 묵 상 송</td><td class="col-content" id="pv-w_meditationSong">국악찬송 13장</td></tr>
-              <tr><td class="col-label">* 복 음 서 읽 기</td><td class="col-content" id="pv-w_gospelRef">마가복음서 4:35-41</td></tr>
-              <tr><td class="col-label">하 늘 뜻 펴 기</td><td class="col-content"><strong id="pv-w_sermonTitle">“바다 저쪽으로 건너가자”</strong></td></tr>
-              <tr><td class="col-label">신 앙 고 백 송</td><td class="col-content" id="pv-w_creedSong">국악찬송 254장</td></tr>
-              <tr><td class="col-label">* 감 사 송</td><td class="col-content" id="pv-w_thanksSong">국악찬송 21장</td></tr>
-              <tr><td class="col-label">* 감 사 기 도</td><td class="col-content"></td></tr>
-              <tr><td class="col-label">* 결 단 찬 송</td><td class="col-content" id="pv-w_decisionSong">국악찬송 222장 (하나님을 믿는 자)</td></tr>
-              <tr><td class="col-label">* 세 상 으 로 보 냄</td><td class="col-content"></td></tr>
-              <tr><td class="col-label">* 축 복 기 도</td><td class="col-content" id="pv-w_blessText">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘.</td></tr>
-              <tr><td class="col-label">* 응 답 송</td><td class="col-content"></td></tr>
-              <tr><td class="col-label">* 징 울 림</td><td class="col-content"></td></tr>
+              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">말 씀 묵 상 송</span></td><td class="col-content" id="pv-w_meditationSong">국악찬송 13장</td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">복 음 서 읽 기</span></td><td class="col-content" id="pv-w_gospelRef">마가복음서 4:35-41</td></tr>
+              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">하 늘 뜻 펴 기</span></td><td class="col-content"><strong id="pv-w_sermonTitle">“바다 저쪽으로 건너가자”</strong></td></tr>
+              <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">신 앙 고 백 송</span></td><td class="col-content" id="pv-w_creedSong">국악찬송 254장</td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">감 사 송</span></td><td class="col-content" id="pv-w_thanksSong">국악찬송 21장</td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">감 사 기 도</span></td><td class="col-content"></td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">결 단 찬 송</span></td><td class="col-content" id="pv-w_decisionSong">국악찬송 222장 (하나님을 믿는 자)</td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">세 상 으 로 보 냄</span></td><td class="col-content"></td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">축 복 기 도</span></td><td class="col-content" id="pv-w_blessText">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘.</td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">응 답 송</span></td><td class="col-content"></td></tr>
+              <tr><td class="col-asterisk">*</td><td class="col-label-cell"><span class="col-label">징 울 림</span></td><td class="col-content"></td></tr>
             </table>
 
             <div class="part2-header">
