@@ -726,20 +726,15 @@
       updatePreview();
     }
 
-    // 100% exact downloadPDF logic requested by user
+    // 요청된 100% exact downloadPDF 단일 함수
     async function downloadPDF() {
-      // 1. 폰트 로딩 보장
       await document.fonts.ready;
-
-      // 2. 스크롤 위치를 최상단으로 강제 고정 (좌표 어긋남 방지)
       window.scrollTo(0, 0);
 
-      // CDN 및 로컬 스코프 교차 호환 객체 추출
-      const jsPDFClass = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : (window.jsPDF || window.jspdf);
-      const pages = document.querySelectorAll('.page'); // 8개의 .page 요소
+      const { jsPDF } = window.jspdf;
+      const pages = document.querySelectorAll('.page');
 
-      // A4 크기를 mm로 고정
-      const pdf = new jsPDFClass({
+      const pdf = new jsPDF({
         unit: 'mm',
         format: 'a4',
         orientation: 'portrait'
@@ -750,14 +745,12 @@
 
       for (let i = 0; i < pages.length; i++) {
         const page = pages[i];
-
-        // 각 페이지를 개별적으로 캡처. scrollY를 0으로 고정해서 좌표 어긋남 방지.
         const canvas = await html2canvas(page, {
-          scale: 2, // 해상도. 2 권장 (안정성)
+          scale: 3,
           useCORS: true,
-          allowTaint: true, // GitHub Pages CORS Tainted Canvas 방지
+          allowTaint: true,
           scrollX: 0,
-          scrollY: -window.scrollY, // 현재 스크롤 오프셋 상쇄
+          scrollY: -window.scrollY,
           windowWidth: document.documentElement.scrollWidth,
           windowHeight: document.documentElement.scrollHeight,
           backgroundColor: '#ffffff'
@@ -765,126 +758,13 @@
 
         const imgData = canvas.toDataURL('image/jpeg', 0.98);
 
-        // 캔버스 비율을 A4 비율(210:297)에 정확히 맞춰서 삽입
-        // .page의 실제 mm 크기(210mm x 297mm)와 동일하게 강제 지정
         if (i > 0) {
           pdf.addPage();
         }
         pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
       }
 
-      pdf.save('향린교회_주보.pdf');
-    }
-
-    function updatePreview() {
-      document.getElementById('pv-foundation').innerText = `창립 ${document.getElementById('foundationYear').value}주년`;
-      document.getElementById('pv-unification').innerText = `통일염원 ${document.getElementById('unificationYear').value}년`;
-      document.getElementById('pv-date').innerText = document.getElementById('worshipDate').value;
-      const seasonVal = document.getElementById('worshipSeason').value;
-      document.getElementById('pv-season').innerText = seasonVal;
-      document.querySelectorAll('.pv-season-sub').forEach(el => el.innerText = seasonVal);
-
-      document.getElementById('pv-motto1').innerText = document.getElementById('motto1').value;
-      document.getElementById('pv-motto2').innerText = document.getElementById('motto2').value;
-      document.getElementById('pv-coverSummary').innerHTML = document.getElementById('coverSummary').value.replace(/\n/g, '<br>');
-      
-      const denomRaw = document.getElementById('denomText').value;
-      document.getElementById('pv-denomText').innerHTML = denomRaw.replace(/\n/g, '<br>');
-
-      const addrRaw = document.getElementById('churchInfoText').value.split('\n');
-      if (addrRaw.length >= 3) {
-        let line2Parts = addrRaw[1].trim().split(/\s+/);
-        document.getElementById('pv-address-box').innerHTML = `
-          <div class="address-wrapper">
-            <div class="address-row">${addrRaw[0]}</div>
-            <div class="address-split-row"><span>${line2Parts[0] || ''}</span><span>${line2Parts[1] || ''}</span></div>
-            <div class="address-split-row"><span>${addrRaw[2].split('전송')[0] || ''}</span><span>${'전송' + (addrRaw[2].split('전송')[1] || '')}</span></div>
-          </div>
-        `;
-      } else {
-        document.getElementById('pv-address-box').innerHTML = `<div class="address-wrapper">${addrRaw.join('<br>')}</div>`;
-      }
-
-      document.getElementById('pv-w_call').innerText = document.getElementById('w_call').value;
-      document.getElementById('pv-w_openSong').innerText = document.getElementById('w_openSong').value;
-      document.getElementById('pv-w_glorySong').innerText = document.getElementById('w_glorySong').value;
-      document.getElementById('pv-w_gloryText').innerText = document.getElementById('w_gloryText').value;
-      document.getElementById('pv-w_choirTitle').innerText = document.getElementById('w_choirTitle').value;
-      document.getElementById('pv-w_choirComposer').innerText = document.getElementById('w_choirComposer').value;
-      document.getElementById('pv-w_choirLyrics').innerHTML = document.getElementById('w_choirLyrics').value.replace(/\n/g, '<br>');
-      document.getElementById('pv-w_scripture').innerText = document.getElementById('w_scripture').value;
-      document.getElementById('pv-w_togetherRef').innerText = document.getElementById('w_togetherRef').value;
-      document.getElementById('pv-w_togetherText').innerHTML = document.getElementById('w_togetherText').value.replace(/\n/g, '<br>');
-
-      document.getElementById('pv-w_meditationSong').innerText = document.getElementById('w_meditationSong').value;
-      document.getElementById('pv-w_gospelRef').innerText = document.getElementById('w_gospelRef').value;
-      document.getElementById('pv-w_sermonTitle').innerText = document.getElementById('w_sermonTitle').value;
-      document.getElementById('pv-w_creedSong').innerText = document.getElementById('w_creedSong').value;
-      document.getElementById('pv-w_thanksSong').innerText = document.getElementById('w_thanksSong').value;
-      document.getElementById('pv-w_decisionSong').innerText = document.getElementById('w_decisionSong').value;
-      document.getElementById('pv-w_blessText').innerText = document.getElementById('w_blessText').value;
-
-      // 3페이지 예배위원 표
-      const r1 = document.getElementById('servant_row1').value.split('|').map(s=>s.trim());
-      const r2 = document.getElementById('servant_row2').value.split('|').map(s=>s.trim());
-      const r3 = document.getElementById('servant_row3').value.split('|').map(s=>s.trim());
-      const duty = document.getElementById('servant_duty').value.replace(/\n/g, '<br>');
-
-      document.getElementById('pv-servant-tbody').innerHTML = `
-        <tr><td>${r1[0]||''}</td><td>${r1[1]||''}</td><td>${r1[2]||''}</td><td>${r1[3]||''}</td><td>${r1[4]||''}</td><td>${r1[5]||''}</td></tr>
-        <tr><td>${r2[0]||''}</td><td>${r2[1]||''}</td><td>${r2[2]||''}</td><td>${r2[3]||''}</td><td>${r2[4]||''}</td><td>${r2[5]||''}</td></tr>
-        <tr><td>${r3[0]||''}</td><td>${r3[1]||''}</td><td>${r3[2]||''}</td><td>${r3[3]||''}</td><td>${r3[4]||''}</td><td>${r3[5]||''}</td></tr>
-        <tr><td colspan="6" class="duty-row"><strong>주일봉사:</strong> ${duty}</td></tr>
-      `;
-
-      // 4페이지 & 5페이지 공동관심사
-      for (let i = 1; i <= 7; i++) {
-        const val = document.getElementById(`ann_sec${i}`).value;
-        const formatted = val.split('\n').map(line => {
-          if (!line.trim()) return '';
-          return `<div class="ann-item">${line.startsWith('∙') ? line : '∙ ' + line}</div>`;
-        }).join('');
-        document.getElementById(`pv-ann${i}`).innerHTML = formatted;
-      }
-      document.getElementById('pv-onlineText').innerText = document.getElementById('ann_onlineText').value;
-      document.getElementById('pv-carbonText').innerText = document.getElementById('ann_carbonText').value;
-      document.getElementById('pv-pledgeText').innerText = document.getElementById('ann_pledgeText').value;
-
-      // 6페이지 향린 정보
-      document.getElementById('pv-info_servants').innerText = document.getElementById('info_servants').value;
-      document.getElementById('pv-info_churches').innerText = document.getElementById('info_churches').value;
-      document.getElementById('pv-info_coop').innerText = document.getElementById('info_coop').value;
-      document.getElementById('pv-info_edu').innerText = document.getElementById('info_edu').value;
-
-      // 7페이지 기도/방문
-      document.getElementById('pv-pray_welcome').innerText = document.getElementById('pray_welcome').value;
-      document.getElementById('pv-pray_health').innerText = document.getElementById('pray_health').value;
-      document.getElementById('pv-pray_military').innerText = document.getElementById('pray_military').value;
-      document.getElementById('pv-pray_overseas').innerText = document.getElementById('pray_overseas').value;
-
-      // 새교우 4열 표 렌더링
-      const commers = document.getElementById('pray_newCommers').value.split(',').map(s=>s.trim()).filter(s=>s);
-      let tableHtml = '';
-      for (let i = 0; i < commers.length; i += 4) {
-        tableHtml += '<tr>';
-        for (let j = 0; j < 4; j++) {
-          tableHtml += `<td>${commers[i + j] || ''}</td>`;
-        }
-        tableHtml += '</tr>';
-      }
-      document.getElementById('pv-pray_table').innerHTML = tableHtml;
-
-      autoSaveToDB();
-    }
-
-    function downloadPDF() {
-      const element = document.getElementById('juboPaper');
-      html2pdf().set({
-        margin: 0,
-        filename: `향린교회_주보_${document.getElementById('worshipDate').value}.pdf`,
-        html2canvas: { scale: 2 },
-        jsPDF: { format: 'a4', orientation: 'portrait' }
-      }).from(element).save();
+      pdf.save(`향린교회_주보_${document.getElementById('worshipDate').value}.pdf`);
     }
 
     function scrollToPage(pageNum) {
