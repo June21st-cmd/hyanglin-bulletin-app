@@ -297,10 +297,10 @@
     .pledge-text { font-size: 14pt; line-height: 1.5; }
 
     /* 6페이지 향린 정보 */
-    .outer-border-box { border: 0.12mm solid #000000; padding: 14px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
-    .outer-border-box h4 { font-size: 17pt; font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid #000; padding-bottom: 2px; }
-    .info-list-text { font-size: 14pt; line-height: 1.6; white-space: pre-wrap; }
-    .inner-border-box { border: 0.12mm solid #000000; padding: 10px; margin-top: 4px; }
+    .page-6 { display: flex; flex-direction: column; gap: 14px; }
+    .outer-border-box { border: 0.12mm solid #000000; padding: 12px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; }
+    .outer-border-box h4 { font-size: 15pt; font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid #000; padding-bottom: 2px; color: #000; font-family: 'Gowun Batang', serif !important; }
+    .info-list-text { font-size: 13.5pt; line-height: 1.5; white-space: pre-wrap; font-family: 'Gowun Batang', serif !important; }
 
     /* 7페이지 기도나눔 */
     .prayer-banner-red { color: #FF0000; text-align: center; font-size: 17pt; font-weight: bold; margin: 14px 0 10px; letter-spacing: 1px; }
@@ -531,6 +531,9 @@
           <div class="form-group"><label>교육부 예배장소 안내</label><textarea id="info_edu" rows="3" oninput="updatePreview()">· 유아·유치부 (0-7세) : 주일 11:00, 4층
 · 어린이부 (8-13세) : 주일 11:00, 1층
 · 청소년부 (14-19세) : 주일 11:00, 5층</textarea></div>
+          <div class="form-group"><label>청년공동체 모임 문의</label><textarea id="info_youth" rows="2" oninput="updatePreview()">· 새날청년회(20-27세) 모임  ╻  · 청년신도회(28-35세) 모임  ╻  · 희년청년회(36-45세) 모임</textarea></div>
+          <div class="form-group"><label>안병무도서관 안내</label><textarea id="info_library" rows="3" oninput="updatePreview()">· 운영시간 : [화, 목] 14:00~17:00 [토] 10:00~12:00, 14:00~17:00 [일] 13:00~17:00
+· 문의 : 도서관 ☎ 02-730-3807(운영시간), 유영상 목사(총무) 010-6600-6261</textarea></div>
         </div>
 
         <!-- 7p 기도/방문 설정 -->
@@ -739,16 +742,27 @@
                 <div class="info-list-text" id="pv-info_servants"></div>
               </div>
               <div>
-                <h4>향린 공동체 교회</h4>
+                <h4 style="margin-top: 6px;">향린 공동체 교회</h4>
                 <div class="info-list-text" id="pv-info_churches"></div>
               </div>
               <div>
-                <h4>도시농촌 선교협력교회(결연 31년)</h4>
+                <h4 style="margin-top: 6px;">도시농촌 선교협력교회(결연 31년)</h4>
                 <div class="info-list-text" id="pv-info_coop"></div>
               </div>
-              <div class="inner-border-box">
-                <h4 style="border:none; font-size:14pt; margin-bottom:2px;">교육부 예배장소 안내</h4>
-                <div class="info-list-text" id="pv-info_edu" style="font-size:12.5pt;"></div>
+            </div>
+
+            <div class="outer-border-box">
+              <div>
+                <h4>교육부 예배장소 안내</h4>
+                <div class="info-list-text" id="pv-info_edu"></div>
+              </div>
+              <div>
+                <h4 style="margin-top: 6px;">청년공동체 모임 문의</h4>
+                <div class="info-list-text" id="pv-info_youth"></div>
+              </div>
+              <div>
+                <h4 style="margin-top: 6px;">안병무도서관 안내</h4>
+                <div class="info-list-text" id="pv-info_library"></div>
               </div>
             </div>
           </div>
@@ -888,7 +902,7 @@
         'w_meditationSong', 'w_meditationText', 'w_gospelRef', 'w_gospelText', 'w_sermonTitle', 'w_creedSong', 'w_thanksSong', 'w_thanksText', 'w_decisionSong', 'w_blessText',
         'servant_row1', 'servant_row2', 'servant_row3', 'servant_duty',
         'ann_fullText', 'ann_sec1', 'ann_sec2', 'ann_sec3', 'ann_sec4', 'ann_sec5', 'ann_sec6', 'ann_sec7', 'ann_onlineText', 'ann_carbonText', 'ann_pledgeText',
-        'info_servants', 'info_churches', 'info_coop', 'info_edu',
+        'info_servants', 'info_churches', 'info_coop', 'info_edu', 'info_youth', 'info_library',
         'pray_welcome', 'pray_newCommers', 'pray_health', 'pray_military', 'pray_overseas'
       ];
       let formData = { images: juboImages };
