@@ -166,19 +166,19 @@
       font-family: 'Gowun Batang', serif !important;
     }
     
-    /* 교독송 악보 첨부 영역 (라벨 시작점에 오선지 좌측 끝 정밀 맞춤) */
+    /* 교독송 악보 첨부 영역 (오른쪽으로 1cm/10mm 들여쓰기 정렬) */
     .sheet-music-box {
-      width: 100%;
+      width: calc(100% - 10mm); /* 1cm 차감한 너비 */
       max-width: none;
       min-height: 60mm;
       border: 2px dashed #ced4da;
       background: #f8f9fa;
       border-radius: 8px;
       display: flex;
-      justify-content: flex-start; /* center에서 flex-start로 변경 */
+      justify-content: flex-start;
       align-items: center;
       overflow: hidden;
-      margin: 6px 0;
+      margin: 6px 0 6px 10px; /* 왼쪽 여백 10mm (1cm) 지정 */
       box-sizing: border-box;
       padding-left: 0;
     }
@@ -194,9 +194,9 @@
       height: auto;
       max-height: 85mm;
       object-fit: contain;
-      object-position: left top; /* 이미지 내용을 왼쪽 정렬 */
+      object-position: left top;
       display: block;
-      margin-left: -5mm; /* 이미지 자체 흰 여백 상쇄용 음수 마진 */
+      margin-left: 0; /* 음수 마진 제거하고 1cm 들여쓰기 정렬 */
     }
 
     .sheet-music-box span.hidden,
