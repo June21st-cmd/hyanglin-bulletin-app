@@ -528,6 +528,58 @@
   <script>
     let juboImages = { cover: '', logo: '', calli: '', sheetMusic: '', poster: '' };
 
+    // ===== IndexedDB 설정 (용량 제한 없이 대용량 이미지/데이터 자동 보관) =====
+    const DB_NAME = 'HyanglinJuboDB';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'juboDraft';
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = function(e) {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
+          }
+        };
+        request.onsuccess = function(e) { resolve(e.target.result); };
+        request.onerror = function(e) { reject(e); };
+      });
+    }
+
+    async function autoSaveToDB() {
+      const data = getFormData();
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        store.put(data, 'currentDraft');
+      } catch(e) {
+        console.error('IndexedDB 저장 실패:', e);
+      }
+    }
+
+    async function loadFromDB() {
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        const request = store.get('currentDraft');
+        request.onsuccess = function() {
+          if (request.result) {
+            restoreData(request.result);
+          } else {
+            // 구 버전에 LocalStorage 데이터가 남아있는 경우 호환 유지
+            const legacy = localStorage.getItem('hyanglin_jubo_v2_data');
+            if (legacy) { try { restoreData(JSON.parse(legacy)); } catch(err) {} }
+            else { updatePreview(); }
+          }
+        };
+      } catch(e) {
+        updatePreview();
+      }
+    }
+
     function switchTab(tabId, evt) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -542,7 +594,7 @@
         reader.onload = function(e) {
           juboImages[type] = e.target.result;
           renderImage(type, e.target.result);
-          autoSaveToLocalStorage();
+          autoSaveToDB();
         };
         reader.readAsDataURL(file);
       }
@@ -568,11 +620,6 @@
         const ph = document.getElementById('pv-poster-placeholder');
         img.src = src; img.classList.remove('hidden'); ph.style.display = 'none';
       }
-    }
-
-    function autoSaveToLocalStorage() {
-      const data = getFormData();
-      try { localStorage.setItem('hyanglin_jubo_v2_data', JSON.stringify(data)); } catch(e) {}
     }
 
     function getFormData() {
@@ -720,7 +767,7 @@
       }
       document.getElementById('pv-pray_table').innerHTML = tableHtml;
 
-      autoSaveToLocalStorage();
+      autoSaveToDB();
     }
 
     function downloadPDF() {
@@ -739,12 +786,7 @@
     }
 
     window.onload = function() {
-      const saved = localStorage.getItem('hyanglin_jubo_v2_data');
-      if (saved) {
-        try { restoreData(JSON.parse(saved)); } catch(e) { updatePreview(); }
-      } else {
-        updatePreview();
-      }
+      loadFromDB();
     };
   </script>
 </body>
