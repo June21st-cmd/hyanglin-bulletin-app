@@ -204,6 +204,19 @@
       display: none !important;
     }
 
+    /* 함께읽는말씀 양쪽 긴 본문 박스 스타일 */
+    .together-text-box {
+      width: 100%;
+      font-size: 14pt !important;
+      font-family: 'Gowun Batang', serif !important;
+      color: #000000;
+      text-align: right;
+      word-break: keep-all;
+      line-height: 1.5;
+      padding-right: 8px;
+      box-sizing: border-box;
+    }
+
     /* 3페이지 예배위원 표 */
     .part2-header { border-bottom: 2px solid #000; padding-bottom: 4px; margin: 16px 0 10px; }
     .part2-header h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: underline; }
@@ -535,9 +548,11 @@
               <tr>
                 <td class="col-asterisk"></td>
                 <td class="col-label-cell"><span class="col-label">함 께 읽 는 말 씀</span></td>
-                <td class="col-content">
-                  <span id="pv-w_togetherRef">시편 107:29-31</span>
-                  <div class="worship-subtext" id="pv-w_togetherText" style="margin-top:4px;">폭풍이 잠잠해지고, 물결도 잔잔해진다.</div>
+                <td class="col-content" id="pv-w_togetherRef">시편 107:29-31</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="padding: 4px 0 8px 10mm;">
+                  <div class="together-text-box" id="pv-w_togetherText">폭풍이 잠잠해지고, 물결도 잔잔해진다.</div>
                 </td>
               </tr>
             </table>
