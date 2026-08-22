@@ -692,6 +692,54 @@
       updatePreview();
     }
 
+    // 정밀 PDF 생성 엔진 (상단 여백 팽창 및 빈 페이지 생성 완벽 차단)
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf || {};
+      const pages = document.querySelectorAll('.page');
+      if (!pages || pages.length === 0) return;
+
+      // jsPDF 객체 직접 생성 (A4 단편/다편)
+      const pdf = new html2pdf.Worker().jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      });
+
+      const element = document.getElementById('juboPaper');
+      
+      // html2pdf 전용 1:1 정밀 옵션
+      const opt = {
+        margin: 0,
+        filename: `향린교회_주보_${document.getElementById('worshipDate').value}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          scrollY: 0,
+          scrollX: 0,
+          windowWidth: 794, // 210mm @ 96dpi 근사
+          windowHeight: 1123 // 297mm @ 96dpi 근사
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      };
+
+      // 임시로 컨테이너의 gap과 padding을 제거하여 캡처 정확도 극대화
+      const paperContainer = document.getElementById('juboPaper');
+      const origGap = paperContainer.style.gap;
+      const origPadding = paperContainer.style.padding;
+      
+      paperContainer.style.gap = '0px';
+      paperContainer.style.padding = '0px';
+
+      try {
+        await html2pdf().set(opt).from(paperContainer).save();
+      } finally {
+        paperContainer.style.gap = origGap;
+        paperContainer.style.padding = origPadding;
+      }
+    };
+
     function updatePreview() {
       // 1페이지
       document.getElementById('pv-foundation').innerText = `창립 ${document.getElementById('foundationYear').value}주년`;
