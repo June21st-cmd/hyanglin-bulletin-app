@@ -163,8 +163,8 @@
     /* 교독송 악보 첨부 영역 (우측 끝까지 100% 정밀 확장) */
     .sheet-music-box {
       width: 100%;
+      max-width: none;
       min-height: 60mm;
-      max-width: 100%; /* 우측 최우측 끝까지 100% 꽉 채우기 */
       border: 2px dashed #ced4da;
       background: #f8f9fa;
       border-radius: 8px;
@@ -185,7 +185,7 @@
     #pv-sheet-img {
       width: 100%;
       height: auto;
-      max-height: 70mm;
+      max-height: 85mm;
       object-fit: contain;
       display: block;
     }
