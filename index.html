@@ -174,10 +174,22 @@
       line-height: 1.5;
     }
 
-    /* 복음서 읽기 대사 전용 (왼쪽 정렬 및 입력한 공백/스페이스/줄바꿈 100% 보존 편집 지원) */
+    /* 복음서 읽기 대사 전용 (우측 정렬 기반 + 읽은이/회중 시작선 정밀 일치) */
     #pv-w_gospelText {
-      text-align: left !important;
-      white-space: pre-wrap !important;
+      text-align: right !important;
+      display: inline-block;
+      width: 100%;
+      line-height: 1.5;
+    }
+    #pv-w_gospelText .gospel-line {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 4px;
+    }
+    #pv-w_gospelText .gospel-speaker {
+      min-width: 60px;
+      text-align: left;
     }
     
     /* 교독송 악보 첨부 영역 (오른쪽으로 0.2cm/2mm 들여쓰기 정렬) */
@@ -581,7 +593,7 @@
                 <td class="col-label-cell"><span class="col-label">복 음 서 읽 기</span></td>
                 <td class="col-content">
                   <span id="pv-w_gospelRef">마가복음서 4:35-41</span>
-                  <div class="worship-subtext" id="pv-w_gospelText">⟨읽은이 : 이것은 주님의 말씀입니다.<br>회중 : 그리스도를 찬양합니다.⟩</div>
+                  <div class="worship-subtext" id="pv-w_gospelText"><div style="display:inline-block; text-align:left;"><div style="display:flex; justify-content:space-between;"><span style="min-width:65px; display:inline-block;">⟨읽은이 :</span><span>이것은 주님의 말씀입니다.</span></div><div style="display:flex; justify-content:space-between;"><span style="min-width:65px; display:inline-block;">회  중 :</span><span>그리스도를 찬양합니다.⟩</span></div></div></div>
                 </td>
               </tr>
               <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">하 늘 뜻 펴 기</span></td><td class="col-content"><strong id="pv-w_sermonTitle">“바다 저쪽으로 건너가자”</strong></td></tr>
@@ -868,7 +880,14 @@
         const pvEl = document.getElementById(`pv-${id}`);
         if (pvEl) {
           const isMultiline = id.startsWith('ann_') || id.includes('Text') || id.includes('Lyrics') || id.includes('Summary') || id.includes('Text');
-          if (isMultiline && id !== 'ann_onlineText' && id !== 'ann_carbonText') {
+          if (id === 'w_gospelText') {
+            const lines = val.split('\n');
+            if (lines.length >= 2) {
+              pvEl.innerHTML = `<div style="display:inline-block; text-align:left;"><div style="display:flex; justify-content:space-between;"><span style="min-width:65px; display:inline-block;">${lines[0].split(':')[0] || '⟨읽은이'} :</span><span>${lines[0].split(':').slice(1).join(':')}</span></div><div style="display:flex; justify-content:space-between;"><span style="min-width:65px; display:inline-block;">${lines[1].split(':')[0] || '회  중'} :</span><span>${lines[1].split(':').slice(1).join(':')}</span></div></div>`;
+            } else {
+              pvEl.innerHTML = val.replace(/\n/g, '<br>');
+            }
+          } else if (isMultiline && id !== 'ann_onlineText' && id !== 'ann_carbonText') {
             pvEl.innerHTML = val.replace(/\n/g, '<br>');
           } else {
             pvEl.innerText = val;
