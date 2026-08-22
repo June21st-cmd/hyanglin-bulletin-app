@@ -95,35 +95,36 @@
     .address-row { text-align: center; margin-bottom: 2px; white-space: nowrap; }
     .address-split-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
-    /* 2페이지 & 3페이지 예배 헤더 및 * 안내문 */
-    .section-header-red-container { border-bottom: 2px solid #000; padding-bottom: 2px; margin-bottom: 6px; }
+    /* 2페이지 & 3페이지 예배 헤더 및 * 안내문 순서 보정 */
+    .section-header-red-container { border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 4px; }
     .section-header-red { display: flex; justify-content: space-between; align-items: flex-end; }
-    .section-header-red h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: none; font-family: 'Gowun Batang', serif; } /* 21pt 붉은색 #FF0000 */
-    .section-header-red h3 span.sub { font-size: 17pt; color: #FF0000; text-decoration: none; font-weight: normal; margin-left: 6px; font-family: 'Noto Sans KR', sans-serif; } /* 17pt 붉은색 #FF0000 */
-    .header-asterisk-subrow { text-align: right; font-size: 11.5pt; color: #000; font-weight: 500; margin-top: 4px; font-family: 'Noto Sans KR', sans-serif; }
+    .section-header-red h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: none; font-family: 'Gowun Batang', serif; margin: 0; }
+    .section-header-red h3 span.sub { font-size: 17pt; color: #FF0000; text-decoration: none; font-weight: normal; margin-left: 6px; font-family: 'Noto Sans KR', sans-serif; }
+    /* 검은 구분선 '아래' 우측 정렬 * 표는 일어남 */
+    .header-asterisk-subrow { text-align: right; font-size: 11.5pt; color: #000; font-weight: 500; margin-top: 4px; margin-bottom: 6px; font-family: 'Noto Sans KR', sans-serif; }
 
-    /* 2페이지 & 3페이지 예배 순서 표 (6가지 요구사항 100% 적용) */
+    /* 2페이지 & 3페이지 예배 순서 표 (별표 영역 분리 + 38mm 회색 블록 고정) */
     .worship-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; }
-    .worship-table td { vertical-align: top; font-size: 15.5pt; line-height: 1.5; }
+    .worship-table tr { border-bottom: none; }
+    .worship-table td { vertical-align: top; font-size: 15.5pt; line-height: 1.5; padding: 2px 0; }
     
-    /* 1. 항목명 셀 배경 #D9D9D9 & 라운드 제거 / 2. 흰색 1px 구분선 / 4. justify 균등배분 */
+    /* 38mm 회색 배경 블록 (왼쪽 정렬, 하단 흰색 구분선) */
     .worship-table .col-label {
-      width: 42mm;
-      min-width: 42mm;
-      max-width: 42mm;
+      width: 38mm;
+      min-width: 38mm;
+      max-width: 38mm;
       background: #D9D9D9;
       border-radius: 0;
       border-bottom: 1px solid #FFFFFF;
       font-size: 14pt;
       font-weight: bold;
-      text-align: justify;
-      text-align-last: justify;
+      text-align: left;
       white-space: nowrap;
       padding: 4px 8px;
       box-sizing: border-box;
     }
 
-    /* 2. 내용 셀은 구분선 없이 transparent */
+    /* 내용 영역 (남은 폭 전체) */
     .worship-table .col-content {
       width: auto;
       word-break: keep-all;
@@ -132,7 +133,7 @@
       background: transparent;
     }
 
-    /* 5. 부연 설명 텍스트 (가사, 본문 등) 오른쪽 정렬 */
+    /* 부연 설명 텍스트 오른쪽 정렬 */
     .worship-subtext,
     .worship-table .col-content .sub-text {
       font-size: 13pt;
@@ -433,8 +434,8 @@
               <div class="section-header-red">
                 <h3>1부∶주일예배 <span class="sub">(<span class="pv-season-sub">성령강림 후 열두째주일</span>)</span></h3>
               </div>
-              <div class="header-asterisk-subrow">* 표는 일어남</div>
             </div>
+            <div class="header-asterisk-subrow">* 표는 일어남</div>
             <table class="worship-table">
               <tr><td class="col-label">징 울 림</td><td class="col-content"></td></tr>
               <tr><td class="col-label">예 배 부 름</td><td class="col-content" id="pv-w_call">시편 67:4-5</td></tr>
