@@ -96,12 +96,20 @@
     .address-split-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
     /* 2페이지 & 3페이지 예배 헤더 및 * 안내문 순서 보정 */
+    .page-2, .page-2 *,
+    .page-3, .page-3 * {
+      font-family: 'Gowun Batang', serif !important;
+    }
+
     .section-header-red-container { border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 4px; }
     .section-header-red { display: flex; justify-content: space-between; align-items: flex-end; }
-    .section-header-red h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: none; font-family: 'Gowun Batang', serif; margin: 0; }
-    .section-header-red h3 span.sub { font-size: 17pt; color: #FF0000; text-decoration: none; font-weight: normal; margin-left: 6px; font-family: 'Gowun Batang', serif; }
-    /* 검은 구분선 '아래' 우측 정렬 * 표는 일어남 */
-    .header-asterisk-subrow { text-align: right; font-size: 11.5pt; color: #000; font-weight: 500; margin-top: 4px; margin-bottom: 6px; font-family: 'Noto Sans KR', sans-serif; }
+    .section-header-red h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: none; font-family: 'Gowun Batang', serif !important; margin: 0; }
+    .section-header-red h3 span.sub,
+    .section-header-red h3 span.sub *,
+    .pv-season-sub { font-size: 17pt; color: #FF0000; text-decoration: none; font-weight: normal; margin-left: 6px; font-family: 'Gowun Batang', serif !important; }
+    
+    /* 검은 구분선 '아래' 우측 정렬 * 표는 일어남 (고운바탕체 적용) */
+    .header-asterisk-subrow { text-align: right; font-size: 11.5pt; color: #000; font-weight: 500; margin-top: 4px; margin-bottom: 6px; font-family: 'Gowun Batang', serif !important; }
 
     /* 2페이지 & 3페이지 예배 순서 표 (3칸 테이블 구조: 별표/회색 1줄 라벨/내용) */
     .worship-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; }
