@@ -503,7 +503,7 @@
           <div class="page page-2" id="page2">
             <div class="section-header-red-container">
               <div class="section-header-red">
-                <h3>1부∶주일예배<span class="sub">(<span class="pv-season-sub">성령강림 후 열두째주일</span>)</span></h3>
+                <h3>1부∶주일예배 <span class="sub" id="pv-worshipSeasonHeader">(성령강림 후 열두째주일)</span></h3>
               </div>
             </div>
             <div class="header-asterisk-subrow">* 표는 일어남</div>
@@ -838,10 +838,12 @@
           }
         }
       });
-      // 2페이지 절기 서체/텍스트 바인딩
-      const seasonSub = document.querySelector('.pv-season-sub');
+      // 2페이지 절기 헤더 괄호+문구 단일 바인딩 (여는 괄호 유격 원천 차단)
+      const seasonHeader = document.getElementById('pv-worshipSeasonHeader');
       const seasonVal = data['worshipSeason2'] || data['worshipSeason'];
-      if (seasonSub && seasonVal) seasonSub.innerText = seasonVal;
+      if (seasonHeader && seasonVal) {
+        seasonHeader.innerText = `(${seasonVal.trim()})`;
+      }
     }
 
     function restoreData(data) {
