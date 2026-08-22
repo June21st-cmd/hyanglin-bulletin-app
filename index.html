@@ -692,53 +692,56 @@
       updatePreview();
     }
 
-    // 정밀 PDF 생성 엔진 (상단 여백 팽창 및 빈 페이지 생성 완벽 차단)
+    // 100% 확실한 PDF 생성 엔진: 8개 페이지 개별 캡처 후 A4 정밀 1:1 결합
     async function downloadPDF() {
-      const { jsPDF } = window.jspdf || {};
-      const pages = document.querySelectorAll('.page');
-      if (!pages || pages.length === 0) return;
-
-      // jsPDF 객체 직접 생성 (A4 단편/다편)
-      const pdf = new html2pdf.Worker().jsPDF({
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait'
-      });
-
-      const element = document.getElementById('juboPaper');
-      
-      // html2pdf 전용 1:1 정밀 옵션
-      const opt = {
-        margin: 0,
-        filename: `향린교회_주보_${document.getElementById('worshipDate').value}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          scrollY: 0,
-          scrollX: 0,
-          windowWidth: 794, // 210mm @ 96dpi 근사
-          windowHeight: 1123 // 297mm @ 96dpi 근사
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
-      };
-
-      // 임시로 컨테이너의 gap과 padding을 제거하여 캡처 정확도 극대화
-      const paperContainer = document.getElementById('juboPaper');
-      const origGap = paperContainer.style.gap;
-      const origPadding = paperContainer.style.padding;
-      
-      paperContainer.style.gap = '0px';
-      paperContainer.style.padding = '0px';
+      const btn = document.querySelector('.btn-success');
+      const origText = btn ? btn.innerHTML : '';
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> PDF 생성 중...';
 
       try {
-        await html2pdf().set(opt).from(paperContainer).save();
+        const pages = document.querySelectorAll('.page');
+        if (!pages || pages.length === 0) return;
+
+        // html2canvas 옵션: 스크롤 위치 및 외부 여백 무시
+        const canvasOptions = {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          scrollY: 0,
+          scrollX: 0
+        };
+
+        // 첫 번째 페이지 캡처
+        const firstCanvas = await html2canvas(pages[0], canvasOptions);
+        const imgData0 = firstCanvas.toDataURL('image/jpeg', 0.98);
+
+        // jsPDF 인스턴스 생성 (A4 단위: mm)
+        const pdf = new jspdf.jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        // 1페이지 추가 (A4 210mm x 297mm 꽉 채움)
+        pdf.addImage(imgData0, 'JPEG', 0, 0, 210, 297);
+
+        // 2페이지부터 8페이지까지 순차 캡처 및 추가
+        for (let i = 1; i < pages.length; i++) {
+          const canvas = await html2canvas(pages[i], canvasOptions);
+          const imgData = canvas.toDataURL('image/jpeg', 0.98);
+          pdf.addPage('a4', 'portrait');
+          pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+        }
+
+        // PDF 파일 저장
+        pdf.save(`향린교회_주보_${document.getElementById('worshipDate').value}.pdf`);
+      } catch (err) {
+        console.error('PDF 생성 에러:', err);
+        alert('PDF 생성 중 오류가 발생했습니다. 브라우저에서 인쇄(Ctrl+P) 기능을 이용해 주세요.');
       } finally {
-        paperContainer.style.gap = origGap;
-        paperContainer.style.padding = origPadding;
+        if (btn) btn.innerHTML = origText;
       }
-    };
+    }
 
     function updatePreview() {
       // 1페이지
