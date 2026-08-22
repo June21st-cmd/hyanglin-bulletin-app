@@ -752,8 +752,9 @@
 
         // 각 페이지를 개별적으로 캡처. scrollY를 0으로 고정해서 좌표 어긋남 방지.
         const canvas = await html2canvas(page, {
-          scale: 3, // 해상도. 2~3 권장
+          scale: 2, // 해상도. 2 권장 (안정성)
           useCORS: true,
+          allowTaint: true, // GitHub Pages CORS Tainted Canvas 방지
           scrollX: 0,
           scrollY: -window.scrollY, // 현재 스크롤 오프셋 상쇄
           windowWidth: document.documentElement.scrollWidth,
