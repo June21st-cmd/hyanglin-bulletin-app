@@ -132,7 +132,7 @@
       width: 100%;
       box-sizing: border-box;
       text-align: left;
-      font-size: 14pt;
+      font-size: 15pt; /* 15pt 적용 */
       font-weight: bold;
       white-space: nowrap;
       padding: 4px 8px;
@@ -146,6 +146,7 @@
       word-break: keep-all;
       padding: 4px 8px 4px 12px;
       background: transparent;
+      font-size: 15pt; /* 15pt 적용 */
       font-family: 'Gowun Batang', serif; /* "1부: 주일예배"와 동일한 폰트 적용 */
     }
 
@@ -159,11 +160,11 @@
       font-family: 'Gowun Batang', serif;
     }
     
-    /* 교독송 악보 첨부 영역 (충분한 높이 확보 및 이미지 업로드 시 has-image 처리) */
+    /* 교독송 악보 첨부 영역 (우측 끝까지 100% 정밀 확장) */
     .sheet-music-box {
       width: 100%;
       min-height: 60mm;
-      max-width: 175mm;
+      max-width: 100%; /* 우측 최우측 끝까지 100% 꽉 채우기 */
       border: 2px dashed #ced4da;
       background: #f8f9fa;
       border-radius: 8px;
