@@ -156,34 +156,36 @@
       text-align: right;
     }
     
-    /* 교독송 악보 첨부 영역 (점선/회색배경 제거, 원본 악보 자연스러운 렌더링) */
+    /* 교독송 악보 첨부 영역 (충분한 높이 확보 및 이미지 업로드 시 has-image 처리) */
     .sheet-music-box {
       width: 100%;
-      min-height: 20mm;
+      min-height: 60mm;
+      max-width: 175mm;
+      border: 2px dashed #ced4da;
+      background: #f8f9fa;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin: 6px 0;
+      box-sizing: border-box;
+    }
+
+    .sheet-music-box.has-image {
       border: none;
       background: transparent;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      margin: 0;
-      padding: 0;
+      min-height: auto;
     }
-    .sheet-music-box img {
+
+    #pv-sheet-img {
       width: 100%;
       height: auto;
-      max-height: none;
+      max-height: 70mm;
       object-fit: contain;
       display: block;
     }
-    .sheet-music-box span {
-      font-size: 0.9rem;
-      color: #888;
-      border: 1px dashed #adb5bd;
-      background: #f8f9fa;
-      width: 100%;
-      padding: 16px;
-      text-align: center;
-    }
+
     .sheet-music-box span.hidden,
     .sheet-music-box img.hidden {
       display: none !important;
@@ -750,11 +752,13 @@
       } else if (type === 'sheetMusic') {
         const img = document.getElementById('pv-sheet-img');
         const ph = document.getElementById('pv-sheet-placeholder');
-        img.src = src; img.classList.remove('hidden'); ph.style.display = 'none';
+        const box = document.getElementById('pv-sheet-box');
+        img.src = src; img.classList.remove('hidden'); ph.style.display = 'none'; box.classList.add('has-image');
       } else if (type === 'poster') {
         const img = document.getElementById('pv-poster-img');
         const ph = document.getElementById('pv-poster-placeholder');
-        img.src = src; img.classList.remove('hidden'); ph.style.display = 'none';
+        const box = document.getElementById('pv-poster-box');
+        img.src = src; img.classList.remove('hidden'); ph.style.display = 'none'; box.classList.add('has-image');
       }
     }
 
