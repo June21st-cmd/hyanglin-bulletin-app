@@ -159,13 +159,14 @@
       padding: 6px 8px 6px 12px;
     }
 
-    /* 가사 및 성서 본문 부연 설명 (영광송 가사, 찬양 가사, 함께읽는말씀 본문 등) 14pt 및 좁은 자간 적용 */
+    /* 가사 및 성서 본문 부연 설명 (영광송, 찬양 가사/작곡가, 함께읽는말씀, 3p 가사/대사/기도문) 14pt 및 자간 -1.0px 적용 */
     .worship-subtext,
     .worship-table .col-content .worship-subtext,
     .worship-table .col-content .sub-text,
-    .together-text-box {
-      font-size: 14pt !important; /* 가사 및 본문 14pt 유지 */
-      letter-spacing: -0.8px !important; /* 가사/본문 자간 추가 좁히기 (-0.8px) */
+    .together-text-box,
+    #pv-w_choirComposer {
+      font-size: 14pt !important;
+      letter-spacing: -1.0px !important; /* 요청하신 자간 -1.0px 지정 */
       color: #000000;
       margin-top: 4px;
       text-align: right;
