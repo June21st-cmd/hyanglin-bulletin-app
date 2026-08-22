@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>향린교회 주보 스마트 자동 작성 시스템</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Batang&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #FF0000;
+      --bg-color: #e9ecef;
+      --panel-bg: #ffffff;
+      --text-color: #000000;
+      --border-color: #dee2e6;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', 'Gowun Batang', 'Batang', sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-color); height: 100vh; overflow: hidden; }
+    .app-container { display: flex; flex-direction: column; height: 100vh; }
+    .app-header { background: #1b1c22; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .logo-area { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { font-size: 1.4rem; color: #ff4d4d; }
+    .logo-area h1 { font-size: 1.15rem; font-weight: 700; }
+    .header-actions { display: flex; gap: 10px; }
+    .main-content { display: flex; flex: 1; overflow: hidden; }
+    
+    /* 에디터 패널 */
+    .editor-panel { width: 480px; background: var(--panel-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; overflow-y: auto; padding: 16px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 6px; }
+    .tab-btn { padding: 6px 10px; border: 1px solid #ced4da; background: #f8f9fa; font-size: 0.78rem; font-weight: 500; color: #495057; cursor: pointer; border-radius: 4px; }
+    .tab-btn.active { background: #1971c2; color: white; font-weight: 700; border-color: #1971c2; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .form-group { margin-bottom: 12px; }
+    .form-group.row { display: flex; gap: 10px; }
+    .form-group .col { flex: 1; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: #343a40; }
+    .form-group input, .form-group textarea { width: 100%; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; }
+    .divider { margin: 16px 0; border: none; border-top: 1px dashed var(--border-color); }
+    .btn { padding: 6px 14px; border: none; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+    .btn-secondary { background: #495057; color: white; }
+    .btn-success { background: #2b8a3e; color: white; }
+
+    /* 미리보기 패널 */
+    .preview-panel { flex: 1; background: #dbe4ff; display: flex; flex-direction: column; overflow: hidden; }
+    .preview-toolbar { background: #ffffff; padding: 8px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 600; }
+    .page-nav button { padding: 3px 8px; font-size: 0.75rem; border: 1px solid #ced4da; background: white; border-radius: 3px; cursor: pointer; margin-left: 2px; }
+    .paper-container { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; align-items: center; gap: 30px; }
+
+    /* 명세서 기준 A4 정밀 레이아웃 */
+    .page {
+      width: 210mm; height: 297mm; min-width: 210mm; max-width: 210mm; min-height: 297mm; max-height: 297mm;
+      background: white; box-shadow: var(--shadow);
+      padding: 17mm 11mm 17mm 12mm; /* 상 17mm, 우 11mm, 하 17mm, 좌 12mm */
+      position: relative; box-sizing: border-box;
+      font-family: 'Gowun Batang', 'Batang', serif; color: #000000; overflow: hidden;
+    }
+
+    /* 1페이지 표지 */
+    .page-1 .page1-header-line { font-size: 15.5pt; font-weight: bold; text-align: left; border-bottom: 0.3mm solid #000; padding-bottom: 3px; margin-bottom: 4px; height: 8mm; }
+    .page-1 .page1-season-line { color: #FF0000; font-size: 17pt; font-weight: bold; text-align: right; margin-bottom: 8px; height: 9mm; }
+    .motto-box { margin: 8px 0 6px; text-align: center; height: 30mm; display: flex; flex-direction: column; justify-content: center; }
+    .motto-box h2 { color: #FF0000; font-size: 32pt; font-weight: 900; letter-spacing: 2px; line-height: 1.25; font-family: 'Gowun Batang', serif; }
+    
+    .cover-photo-box {
+      width: 100%; max-width: 180mm; height: 141mm; border: 2px dashed #ced4da; background: #f8f9fa;
+      display: flex; justify-content: center; align-items: center; overflow: hidden; margin: 6px auto 4px; position: relative;
+    }
+    .cover-photo-box.has-image { border: none !important; background: transparent !important; }
+    .cover-img-fit { width: 100% !important; height: 100% !important; object-fit: contain !important; display: block; margin: 0 auto; }
+    .cover-placeholder-text { text-align: center; color: #adb5bd; font-size: 0.95rem; font-family: 'Noto Sans KR', sans-serif; line-height: 1.5; }
+    .cover-summary-centered { font-size: 11pt; font-family: 'Gowun Batang', serif; text-align: center; line-height: 1.6; margin: 8px 0 12px; color: #000; letter-spacing: -0.5px; height: 16mm; display: flex; align-items: center; justify-content: center; }
+
+    .church-footer-stacked { display: flex; flex-direction: column; align-items: center; width: 100%; position: absolute; bottom: 17mm; left: 12mm; right: 11mm; width: calc(100% - 23mm); }
+    .footer-top-brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; height: 30mm; }
+    .brand-logo-img { height: 28mm !important; width: auto; object-fit: contain; }
+    .brand-denom-text { font-size: 16pt; font-weight: bold; line-height: 1.4; color: #FF0000; text-align: center; letter-spacing: 3px; font-family: 'Gowun Batang', serif; white-space: pre-line; min-width: 120px; }
+    .brand-calli-img { height: 21mm !important; width: auto; object-fit: contain; }
+    .footer-bottom-address { font-size: 10.5pt; text-align: center; line-height: 1.5; color: #000; font-family: 'Gowun Batang', serif; width: 100%; letter-spacing: -0.5px; }
+    .address-row { margin-bottom: 2px; }
+    .address-split-row { display: flex; justify-content: space-between; padding: 0 10px; margin-bottom: 2px; }
+
+    /* 헤더 일반 (2페이지 이후) */
+    .section-header-red { border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .section-header-red h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: underline; font-family: 'Gowun Batang', serif; }
+    .section-header-red h3 span.sub { font-size: 17pt; text-decoration: none; font-weight: normal; margin-left: 6px; }
+    .right-asterisk { font-size: 10pt; font-weight: normal; color: #000; }
+
+    /* 2페이지 & 3페이지 예배 순서 표 */
+    .worship-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
+    .worship-table td { vertical-align: top; padding: 3px 0; font-size: 15.5pt; line-height: 1.5; }
+    .worship-table .col-label { width: 42mm; font-size: 14pt; font-weight: bold; letter-spacing: 2px; text-align: justify; text-justify: inter-character; padding-right: 8px; white-space: nowrap; }
+    .worship-table .col-content { width: auto; }
+    .worship-subtext { font-size: 13pt; color: #333; margin-top: 2px; }
+    .sheet-music-box { width: 100%; height: 48mm; border: 1px dashed #adb5bd; background: #f8f9fa; display: flex; align-items: center; justify-content: center; margin: 4px 0; }
+    .sheet-music-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    /* 3페이지 예배위원 표 */
+    .part2-header { border-bottom: 2px solid #000; padding-bottom: 4px; margin: 16px 0 10px; }
+    .part2-header h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: underline; }
+    .servant-section-title { text-align: center; font-size: 14pt; font-weight: bold; margin: 12px 0 8px; }
+    .servant-table { width: 100%; border-collapse: collapse; font-size: 15pt; text-align: center; margin-bottom: 8px; }
+    .servant-table th, .servant-table td { border: 0.12mm solid #000000; padding: 6px 4px; }
+    .servant-table th { background: #D9D9D9; font-weight: bold; }
+    .servant-table .duty-row { text-align: left; padding: 6px 8px; font-size: 13.5pt; line-height: 1.5; }
+
+    /* 4페이지 & 5페이지 공동관심사 */
+    .tab-gray-banner { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 14px; }
+    .gray-blocks { display: flex; height: 10mm; }
+    .gray-blocks span { width: 12mm; height: 100%; }
+    .gray-blocks span:nth-child(1) { background: #e9ecef; }
+    .gray-blocks span:nth-child(2) { background: #ced4da; }
+    .gray-blocks span:nth-child(3) { background: #adb5bd; }
+    .gray-blocks span:nth-child(4) { background: #6c757d; }
+    .gray-blocks span:nth-child(5) { background: #343a40; }
+    .banner-title { background: #000000; color: #FFFFFF; font-size: 16pt; font-weight: bold; padding: 4px 20px; height: 10mm; display: flex; align-items: center; }
+    
+    .ann-section { margin-bottom: 12px; }
+    .ann-title-banner { background: #000000; color: #FFFFFF; padding: 2px 10px; font-size: 14pt; font-weight: bold; display: inline-block; margin-bottom: 6px; }
+    .ann-list { font-size: 15.5pt; line-height: 1.5; letter-spacing: -0.3px; padding-left: 4px; }
+    .ann-item { margin-bottom: 4px; white-space: pre-wrap; word-break: keep-all; }
+
+    .black-bar { background: #000000; color: #FFFFFF; padding: 6px 12px; font-size: 13.5pt; font-weight: bold; margin: 10px 0 6px; text-align: center; }
+    .gray-bar { background: #495057; color: #FFFFFF; padding: 6px 12px; font-size: 13pt; margin-bottom: 10px; text-align: center; }
+    .pledge-box { border: 0.7mm solid #000000; padding: 10px 14px; margin-top: 10px; }
+    .pledge-title { text-align: center; font-weight: bold; font-size: 14pt; margin-bottom: 6px; }
+    .pledge-text { font-size: 14pt; line-height: 1.5; }
+
+    /* 6페이지 향린 정보 */
+    .outer-border-box { border: 0.12mm solid #000000; padding: 14px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
+    .outer-border-box h4 { font-size: 17pt; font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid #000; padding-bottom: 2px; }
+    .info-list-text { font-size: 14pt; line-height: 1.6; white-space: pre-wrap; }
+    .inner-border-box { border: 0.12mm solid #000000; padding: 10px; margin-top: 4px; }
+
+    /* 7페이지 기도나눔 */
+    .prayer-banner-red { color: #FF0000; text-align: center; font-size: 17pt; font-weight: bold; margin: 14px 0 10px; letter-spacing: 1px; }
+    .prayer-table { width: 100%; border-collapse: collapse; font-size: 12pt; margin-bottom: 10px; }
+    .prayer-table td { width: 25%; padding: 4px 2px; text-align: left; vertical-align: top; border: none; }
+    .prayer-section-title { font-size: 14pt; font-weight: bold; margin: 10px 0 4px; }
+
+    /* 8페이지 목회마당 포스터 */
+    .page-8 { display: flex; flex-direction: column; }
+    .poster-header-banner { background: #000; color: white; text-align: center; font-size: 18pt; font-weight: bold; padding: 6px 0; margin-bottom: 10px; letter-spacing: 4px; }
+    .poster-container-full { flex: 1; border: 1px solid #ced4da; display: flex; justify-content: center; align-items: center; overflow: hidden; background: #f8f9fa; }
+    .poster-container-full img { width: 100%; height: 100%; object-fit: contain; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-container">
+    <header class="app-header">
+      <div class="logo-area">
+        <i class="fa-solid fa-church logo-icon"></i>
+        <h1>향린교회 주보 스마트 자동 작성 시스템</h1>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="saveJuboData()"><i class="fa-solid fa-floppy-disk"></i> 주보 저장하기</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('loadJsonInput').click()"><i class="fa-solid fa-folder-open"></i> 주보 불러오기</button>
+        <input type="file" id="loadJsonInput" accept=".json" style="display:none;" onchange="loadJuboData(event)">
+        <button class="btn btn-success" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> PDF 다운로드 / 인쇄</button>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <!-- 에디터 패널 -->
+      <aside class="editor-panel">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('basic', event)">1p(표지)</button>
+          <button class="tab-btn" onclick="switchTab('worship1', event)">2p(예배1)</button>
+          <button class="tab-btn" onclick="switchTab('worship2', event)">3p(예배2/위원)</button>
+          <button class="tab-btn" onclick="switchTab('ann1', event)">4p(공동관심사1)</button>
+          <button class="tab-btn" onclick="switchTab('ann2', event)">5p(공동관심사2)</button>
+          <button class="tab-btn" onclick="switchTab('info', event)">6p(향린정보)</button>
+          <button class="tab-btn" onclick="switchTab('prayer', event)">7p(기도/방문)</button>
+          <button class="tab-btn" onclick="switchTab('poster', event)">8p(목회마당)</button>
+        </div>
+
+        <!-- 1p 표지 설정 -->
+        <div id="tab-basic" class="tab-content active">
+          <h3>1페이지 (표지) 설정</h3>
+          <div class="form-group row">
+            <div class="col"><label>창립 년수</label><input type="text" id="foundationYear" value="73" oninput="updatePreview()"></div>
+            <div class="col"><label>통일염원 년수</label><input type="text" id="unificationYear" value="82" oninput="updatePreview()"></div>
+          </div>
+          <div class="form-group row">
+            <div class="col"><label>예배 날짜</label><input type="text" id="worshipDate" value="2026년 8월 16일" oninput="updatePreview()"></div>
+            <div class="col"><label>절기 구분</label><input type="text" id="worshipSeason" value="성령강림 후 열두째주일" oninput="updatePreview()"></div>
+          </div>
+          <div class="form-group"><label>표어 1번째 줄</label><input type="text" id="motto1" value="작은 믿음 다시 모아" oninput="updatePreview()"></div>
+          <div class="form-group"><label>표어 2번째 줄</label><input type="text" id="motto2" value="새로 심는 향린 73" oninput="updatePreview()"></div>
+          <hr class="divider">
+          <div class="form-group"><label>대문 사진 업로드 (4격자 이미지)</label><input type="file" accept="image/*" onchange="handleImageUpload('cover', event)"></div>
+          <div class="form-group"><label>대문 사진 하단 주요 일정 요약</label><textarea id="coverSummary" rows="2" oninput="updatePreview()">초청 하늘뜻펴기(허석헌 목사) ╻ 평화통일주일 성만찬예식&#10;사회부 수련회 ╻ 8.15자주평화대행진 릴레이발언</textarea></div>
+          <hr class="divider">
+          <div class="form-group"><label>1. 촛불 십자가 로고 이미지</label><input type="file" accept="image/*" onchange="handleImageUpload('logo', event)"></div>
+          <div class="form-group"><label>2. 교단명 (줄바꿈 가능)</label><textarea id="denomText" rows="2" oninput="updatePreview()">한 국 기 독 교&#10;장   로   회</textarea></div>
+          <div class="form-group"><label>3. 향린교회 캘리그라피 이미지</label><input type="file" accept="image/*" onchange="handleImageUpload('calli', event)"></div>
+          <div class="form-group"><label>4. 하단 주소 및 연락처</label><textarea id="churchInfoText" rows="3" oninput="updatePreview()">주소 : 서울시 종로구 경희궁2길 11 (내수동 110-5)&#10;http://www.hyanglin.org     hyanglin24@gmail.com&#10;전화: 776-3806, 9141            전송: 776-2761</textarea></div>
+        </div>
+
+        <!-- 2p 예배1 설정 -->
+        <div id="tab-worship1" class="tab-content">
+          <h3>2페이지 (1부 주일예배 1)</h3>
+          <div class="form-group"><label>예배부름</label><input type="text" id="w_call" value="시편 67:4-5" oninput="updatePreview()"></div>
+          <div class="form-group"><label>여는찬송</label><input type="text" id="w_openSong" value="찬송 324장 (예수 나를 오라 하네)" oninput="updatePreview()"></div>
+          <div class="form-group"><label>교독송 악보 이미지 업로드</label><input type="file" accept="image/*" onchange="handleImageUpload('sheetMusic', event)"></div>
+          <div class="form-group"><label>영광송</label><input type="text" id="w_glorySong" value="국악찬송 5장" oninput="updatePreview()"></div>
+          <div class="form-group"><label>영광송 하단 가사</label><input type="text" id="w_gloryText" value="성부 성자와 성령 영원히 영광 받으소서 태초부터 지금까지 영광 영광 아멘" oninput="updatePreview()"></div>
+          <div class="form-group"><label>찬양 제목</label><input type="text" id="w_choirTitle" value="“내가 산을 향하여”" oninput="updatePreview()"></div>
+          <div class="form-group"><label>찬양 작곡가 정보</label><input type="text" id="w_choirComposer" value="(글: Joseph M. Martin, 곡: Joseph M. Martin & David Angerman)" oninput="updatePreview()"></div>
+          <div class="form-group"><label>찬양 핵심 가사/요약</label><textarea id="w_choirLyrics" rows="2" oninput="updatePreview()">내가 산을 향하여서 나의 눈을 들리라 나의 도움이 어디서 올꼬&#10;천지를 지으신 여호와에게서로다</textarea></div>
+          <div class="form-group"><label>성서읽기</label><input type="text" id="w_scripture" value="시편 107:23-32 (886쪽), 고린도후서 1:8-11 (305쪽)" oninput="updatePreview()"></div>
+          <div class="form-group"><label>함께 읽는 말씀 구절</label><input type="text" id="w_togetherRef" value="시편 107:29-31" oninput="updatePreview()"></div>
+          <div class="form-group"><label>함께 읽는 말씀 본문</label><textarea id="w_togetherText" rows="3" oninput="updatePreview()">폭풍이 잠잠해지고, 물결도 잔잔해진다.&#10;사방이 조용해지니 모두들 기뻐하고, 주님은 그들이 바라는 항구로 그들을 인도하여 주신다.&#10;주님의 인자하심을 감사하여라. 사람에게 베푸신 주님의 놀라운 구원을 감사하여라.</textarea></div>
+        </div>
+
+        <!-- 3p 예배2/위원 설정 -->
+        <div id="tab-worship2" class="tab-content">
+          <h3>3페이지 (1부 예배 연속 & 예배위원 표)</h3>
+          <div class="form-group"><label>말씀묵상송</label><input type="text" id="w_meditationSong" value="국악찬송 13장" oninput="updatePreview()"></div>
+          <div class="form-group"><label>복음서 읽기 구절</label><input type="text" id="w_gospelRef" value="마가복음서 4:35-41" oninput="updatePreview()"></div>
+          <div class="form-group"><label>하늘뜻펴기 제목</label><input type="text" id="w_sermonTitle" value="“바다 저쪽으로 건너가자”" oninput="updatePreview()"></div>
+          <div class="form-group"><label>신앙고백송</label><input type="text" id="w_creedSong" value="국악찬송 254장" oninput="updatePreview()"></div>
+          <div class="form-group"><label>감사송</label><input type="text" id="w_thanksSong" value="국악찬송 21장" oninput="updatePreview()"></div>
+          <div class="form-group"><label>결단찬송</label><input type="text" id="w_decisionSong" value="국악찬송 222장 (하나님을 믿는 자)" oninput="updatePreview()"></div>
+          <div class="form-group"><label>축복기도 문구</label><textarea id="w_blessText" rows="2" oninput="updatePreview()">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘. (고린도후서 13:13)</textarea></div>
+          <hr class="divider">
+          <h4>예배위원 / 봉사자 안내 표</h4>
+          <div class="form-group"><label>1주차 (날짜 | 인도 | 목회기도 | 성서읽기 | 하늘뜻 | 감사기도)</label><input type="text" id="servant_row1" value="08/16 | 최필수 장로 | 김기수 장로 | 정현정 교우 | 한문덕 목사 | 박융식 교우" oninput="updatePreview()"></div>
+          <div class="form-group"><label>2주차</label><input type="text" id="servant_row2" value="08/23 | 최필수 장로 | 피경원 장로 | 정원혁 교우 | 한문덕 목사 | 김경민 집사" oninput="updatePreview()"></div>
+          <div class="form-group"><label>3주차</label><input type="text" id="servant_row3" value="08/30 | 김기수 장로 | 하상우 집사 | 곽이안 어린이 | 유영상 목사 | 김이도 푸른이" oninput="updatePreview()"></div>
+          <div class="form-group"><label>주일봉사 안내 행</label><textarea id="servant_duty" rows="2" oninput="updatePreview()">예배안내(이옥희 김현정) ╻ 방송실(신동준 연명흠 김진호)&#10;헌금계수(재정부) ╻ 주차(관리부 청남) ╻ 공동식사(봉사부 희여) ╻ 분리배출(희여)</textarea></div>
+        </div>
+
+        <!-- 4p 공동관심사1 설정 -->
+        <div id="tab-ann1" class="tab-content">
+          <h3>4페이지 (공동관심사 나눔 1)</h3>
+          <div class="form-group"><label>1. 오늘 일정 안내</label><textarea id="ann_sec1" rows="3" oninput="updatePreview()">∙ 안병무 박사 30주기 연극 〈선천댁〉 연습 : 15:00, 향우실(1층)</textarea></div>
+          <div class="form-group"><label>2. 교우 소식</label><textarea id="ann_sec2" rows="3" oninput="updatePreview()">∙ 아기 탄생(득녀) : 홍윤택/함솔이 교우 가정 (아기 이름: 홍예주)</textarea></div>
+          <div class="form-group"><label>3. 함께 만드는 향린</label><textarea id="ann_sec3" rows="10" oninput="updatePreview()">∙ 임시공동의회 공고 : 8/30(일) 예배 직후, 대예배실(2층) ※안건: 시무장로(2명) 선출의 건
+∙ 장학헌금 : KEB 하나은행 178-910042-51004 한국기독교장로회향린교회
+∙ 교회 장학금(상반기) 신청 : 8/16(일)~8/30(일) 오전 10시까지 신청 바랍니다. ※접수: 교회 이메일(hyanglin24@gmail.com)
+∙ 선교부 신입부원 모집 : 9/27(일)까지 ※문의: 정상희 집사(010-9631-8150)
+∙ 안병무 박사 30주기 연극 〈선천댁〉 안내 : 출연 배우 확정 완결. 스태프 분야에서 홍보 마케팅으로 함께할 분을 찾습니다.</textarea></div>
+          <div class="form-group"><label>4. 이번주 일정 안내</label><textarea id="ann_sec4" rows="6" oninput="updatePreview()">∙ 안병무 박사 30주기 연극 〈선천댁〉 연습 : 8/20(목) 19:00, 8/23(일) 15:00
+∙ 성서배움마당 「주의 기도」 2강 “하늘과 같이” : 8/21(금) 19:30, 향우실(1층)</textarea></div>
+        </div>
+
+        <!-- 5p 공동관심사2 설정 -->
+        <div id="tab-ann2" class="tab-content">
+          <h3>5페이지 (공동관심사 나눔 2)</h3>
+          <div class="form-group"><label>5. 이후 일정 안내</label><textarea id="ann_sec5" rows="4" oninput="updatePreview()">∙ 교회교육주일 예배 : 8/30(일) 11:00, 대예배실(2층)&#10;∙ 희년여신도회 기상읽기모임 : 8/30(일) 13:30, 세미나실(4층)</textarea></div>
+          <div class="form-group"><label>6. 에큐메니칼 소식</label><textarea id="ann_sec6" rows="5" oninput="updatePreview()">∙ 에큐메니칼 평화기행 : 8/16(일) 13:20 ~ 17일(월) 17:00&#10;∙ 향린공동체협의회 : 8/16(일) 16:00, 들꽃향린교회</textarea></div>
+          <div class="form-group"><label>7. 감사헌금 명단</label><textarea id="ann_sec7" rows="3" oninput="updatePreview()">강정구/노재열(고통에서벗어남), 나영훈(범사), 박융식(생일), 배미원, 백경배, 백승남, 신인옥, 이래현(생일), 이수웅/최영미(아들입대), 이인식, 이정자(범사), 정현정(범사), 허석헌, 장소(통일의길)</textarea></div>
+          <div class="form-group"><label>온라인헌금 안내 문구</label><input type="text" id="ann_onlineText" value="【온라인헌금 안내】 KEB하나은행 024-22-02085-6 향린교회 (입금시 이름 / 목적 명기)" oninput="updatePreview()"></div>
+          <div class="form-group"><label>교회탄소중립 문구</label><input type="text" id="ann_carbonText" value="【교회탄소중립】 7월전기 사용량 5.86MWh(전년5.91MWh) / 생산량 1.08MWh(전년1.26MWh)" oninput="updatePreview()"></div>
+          <div class="form-group"><label>향린교인 생활실천 다짐 내용</label><textarea id="ann_pledgeText" rows="3" oninput="updatePreview()">6. 우리는 누구에게나 햇빛과 비를 주셔서 평등하게 사랑하시는 하나님을 믿으며, 교회와 가정, 직장 등 모든 관계에서 차별적 언어나 행위를 하지 않도록 민감하게 성찰하며 행동한다.</textarea></div>
+        </div>
+
+        <!-- 6p 향린정보 설정 -->
+        <div id="tab-info" class="tab-content">
+          <h3>6페이지 (향린 정보)</h3>
+          <div class="form-group"><label>향린을 섬기는 사람들</label><textarea id="info_servants" rows="6" oninput="updatePreview()">· 담임목사 : 한문덕
+· 시무장로 : 강은성 김기수 김정미 나현대 이은경 채운석 최필수 피경원
+· 부 목 사 : 김지목(관리) 이민하(행정) 유영상(교육부, 청년회)
+· 교육전도사 : 이휘석(유아·유치부) 임유진(어린이부) 이동훈(청소년부)
+· 미디어 담당목사 : 이원혁 / 음향 : 이태원
+· 직    원 : 최미정(사무행정)</textarea></div>
+          <div class="form-group"><label>향린 공동체 교회</label><textarea id="info_churches" rows="3" oninput="updatePreview()">· 강남향린교회 ╻ 서울시 송파구 동남로24길 37 ☎ 02-407-2130
+· 들꽃향린교회 ╻ 서울시 강동구 천호대로 991 ☎ 02-478-9101
+· 섬돌향린교회 ╻ 서울시 은평구 증산로17가길 15-7 B1층 ☎ 02-2138-2412</textarea></div>
+          <div class="form-group"><label>도시농촌 선교협력교회</label><input type="text" id="info_coop" value="· 들녘교회 ╻ 전라북도 완주군 이서면 정농대농길 217 ☎ 063-221-5940" oninput="updatePreview()"></div>
+          <div class="form-group"><label>교육부 예배장소 안내</label><textarea id="info_edu" rows="3" oninput="updatePreview()">· 유아·유치부 (0-7세) : 주일 11:00, 4층
+· 어린이부 (8-13세) : 주일 11:00, 1층
+· 청소년부 (14-19세) : 주일 11:00, 5층</textarea></div>
+        </div>
+
+        <!-- 7p 기도/방문 설정 -->
+        <div id="tab-prayer" class="tab-content">
+          <h3>7페이지 (방문안내 & 기도나눔)</h3>
+          <div class="form-group"><label>방문 환영 안내 문구</label><textarea id="pray_welcome" rows="4" oninput="updatePreview()">․ 향린교회의 층별 구성은 다음과 같습니다. 1층(향우실, 어린이부실, 방재실, 목회실), 2층(대예배실, 성가대실/성찬준비실), 3층(안병무도서관, 스튜디오, 방송실), 4층(상담실, 세미나실, 목회실, 유아·유치부실, 담임목사실, 사무실), 5층(식당, 서고, 청소년부실, 친교실), 6층(옥상정원) ※화장실 위치: 1층, 4층, 5층&#10;․ 예배 중에는 찬송가와 국악찬송가를 함께 사용합니다.&#10;․ 헌금은 예배실 입구에 마련되어 있는 헌금함에 봉헌합니다.</textarea></div>
+          <div class="form-group"><label>등록 새교우 목록 (콤마 구분: 이름(소속,날짜))</label><textarea id="pray_newCommers" rows="4" oninput="updatePreview()">왕희송(새청, 8/09), 정일민(새청, 7/26), 장현아(새청, 7/05), 강윤주(희청, 6/28), 신경자(청여, 6/14), 박지현(새청, 6/07), 조상래(청남, 5/24), 이혜순(희여, 5/24)</textarea></div>
+          <div class="form-group"><label>건강회복을 위해</label><textarea id="pray_health" rows="2" oninput="updatePreview()">김근호 김남기 김수자 김예선 김윤기 김종일 김 혁 노경선 림원섭 백경배 신지유 안미숙 오낙영 이숙영 이영일 이유미 이재필 조규혜 조신원 채미희 최충일 한상준</textarea></div>
+          <div class="form-group"><label>군복무 중인 교우</label><input type="text" id="pray_military" value="이상훈 이정호 홍나모" oninput="updatePreview()"></div>
+          <div class="form-group"><label>해외 체류 중인 교우</label><textarea id="pray_overseas" rows="2" oninput="updatePreview()">김강운 김연희 남원정 남택우 손유나 우상균 이혜진A 임한결 정새미 정준모 정준재 조현모 최영미 최한나 추미양 황영준</textarea></div>
+        </div>
+
+        <!-- 8p 목회마당 설정 -->
+        <div id="tab-poster" class="tab-content">
+          <h3>8페이지 (목회마당 포스터)</h3>
+          <div class="form-group"><label>목회마당 포스터 이미지 업로드</label><input type="file" accept="image/*" onchange="handleImageUpload('poster', event)"></div>
+        </div>
+      </aside>
+
+      <!-- 미리보기 패널 -->
+      <main class="preview-panel">
+        <div class="preview-toolbar">
+          <span>실시간 향린 주보 미리보기 (A4 정밀 명세 규격)</span>
+          <div class="page-nav">
+            <button onclick="scrollToPage(1)">1p</button><button onclick="scrollToPage(2)">2p</button><button onclick="scrollToPage(3)">3p</button>
+            <button onclick="scrollToPage(4)">4p</button><button onclick="scrollToPage(5)">5p</button><button onclick="scrollToPage(6)">6p</button>
+            <button onclick="scrollToPage(7)">7p</button><button onclick="scrollToPage(8)">8p</button>
+          </div>
+        </div>
+
+        <div class="paper-container" id="juboPaper">
+          <!-- 1페이지 표지 -->
+          <div class="page page-1" id="page1">
+            <div class="page1-header-line">(<span id="pv-foundation">창립 73주년</span> / <span id="pv-unification">통일염원 82년</span>) <span id="pv-date">2026년 8월 16일</span></div>
+            <div class="page1-season-line" id="pv-season">성령강림 후 열두째주일</div>
+            <div class="motto-box">
+              <h2 id="pv-motto1">작은 믿음 다시 모아</h2>
+              <h2 id="pv-motto2">새로 심는 향린 73</h2>
+            </div>
+            <div class="cover-photo-box" id="pv-cover-box">
+              <div id="pv-cover-placeholder" class="cover-placeholder-text"><i class="fa-regular fa-image" style="font-size: 2rem; margin-bottom: 8px;"></i><br>대문사진 업로드 영역</div>
+              <img id="pv-cover-img" src="" alt="대문사진" class="cover-img-fit hidden">
+            </div>
+            <div class="cover-summary-centered" id="pv-coverSummary">초청 하늘뜻펴기(허석헌 목사) ╻ 평화통일주일 성만찬예식<br>사회부 수련회 ╻ 8.15자주평화대행진 릴레이발언</div>
+            <div class="church-footer-stacked">
+              <div class="footer-top-brand">
+                <img id="pv-logo-img" src="" alt="향린교회 로고" class="brand-logo-img">
+                <div class="brand-denom-text" id="pv-denomText">한 국 기 독 교<br>장   로   회</div>
+                <img id="pv-calli-img" src="" alt="향린교회 캘리" class="brand-calli-img">
+              </div>
+              <div class="footer-bottom-address" id="pv-address-box">
+                <div class="address-row" id="pv-address-line1">주소 : 서울시 종로구 경희궁2길 11 (내수동 110-5)</div>
+                <div class="address-split-row"><span>http://www.hyanglin.org</span><span>hyanglin24@gmail.com</span></div>
+                <div class="address-split-row"><span>전화: 776-3806, 9141</span><span>전송: 776-2761</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2페이지 1부 주일예배 1 -->
+          <div class="page page-2" id="page2">
+            <div class="section-header-red">
+              <h3>1부∶주일예배 <span class="sub">(<span class="pv-season-sub">성령강림 후 열두째주일</span>)</span></h3>
+              <span class="right-asterisk">* 표는 일어남</span>
+            </div>
+            <table class="worship-table">
+              <tr><td class="col-label">징 울 림</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">예 배 부 름</td><td class="col-content" id="pv-w_call">시편 67:4-5</td></tr>
+              <tr><td class="col-label">*여 는 찬 송</td><td class="col-content" id="pv-w_openSong">찬송 324장 (예수 나를 오라 하네)</td></tr>
+              <tr>
+                <td class="col-label">*교 독 송</td>
+                <td class="col-content">
+                  <div class="sheet-music-box" id="pv-sheet-box">
+                    <span id="pv-sheet-placeholder" style="font-size:0.9rem; color:#888;">교독송 악보 이미지 업로드 영역</span>
+                    <img id="pv-sheet-img" src="" alt="교독송 악보" class="hidden" style="max-height:100%;">
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="col-label">*영 광 송</td>
+                <td class="col-content">
+                  <span id="pv-w_glorySong">국악찬송 5장</span>
+                  <div class="worship-subtext" id="pv-w_gloryText">성부 성자와 성령 영원히 영광 받으소서 태초부터 지금까지 영광 영광 아멘</div>
+                </td>
+              </tr>
+              <tr><td class="col-label">목 회 기 도</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">기 도 송</td><td class="col-content"></td></tr>
+              <tr>
+                <td class="col-label">찬 양</td>
+                <td class="col-content">
+                  <strong id="pv-w_choirTitle">“내가 산을 향하여”</strong> <span id="pv-w_choirComposer" style="font-size:12pt; color:#444;">(글: Joseph M. Martin, 곡: Joseph M. Martin & David Angerman)</span>
+                  <div class="worship-subtext" id="pv-w_choirLyrics" style="margin-top:4px;">내가 산을 향하여서 나의 눈을 들리라 나의 도움이 어디서 올꼬<br>천지를 지으신 여호와에게서로다</div>
+                </td>
+              </tr>
+              <tr><td class="col-label">성 서 읽 기</td><td class="col-content" id="pv-w_scripture">시편 107:23-32 (886쪽), 고린도후서 1:8-11 (305쪽)</td></tr>
+              <tr>
+                <td class="col-label">함께읽는말씀</td>
+                <td class="col-content">
+                  <span id="pv-w_togetherRef">시편 107:29-31</span>
+                  <div class="worship-subtext" id="pv-w_togetherText" style="margin-top:4px;">폭풍이 잠잠해지고, 물결도 잔잔해진다.</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- 3페이지 1부 예배 연속 & 예배위원 표 -->
+          <div class="page page-3" id="page3">
+            <table class="worship-table">
+              <tr><td class="col-label">말 씀 묵 상 송</td><td class="col-content" id="pv-w_meditationSong">국악찬송 13장</td></tr>
+              <tr><td class="col-label">*복 음 서 읽 기</td><td class="col-content" id="pv-w_gospelRef">마가복음서 4:35-41</td></tr>
+              <tr><td class="col-label">하 늘 뜻 펴 기</td><td class="col-content"><strong id="pv-w_sermonTitle">“바다 저쪽으로 건너가자”</strong></td></tr>
+              <tr><td class="col-label">신 앙 고 백 송</td><td class="col-content" id="pv-w_creedSong">국악찬송 254장</td></tr>
+              <tr><td class="col-label">*감 사 송</td><td class="col-content" id="pv-w_thanksSong">국악찬송 21장</td></tr>
+              <tr><td class="col-label">*감 사 기 도</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">*결 단 찬 송</td><td class="col-content" id="pv-w_decisionSong">국악찬송 222장 (하나님을 믿는 자)</td></tr>
+              <tr><td class="col-label">*세 상 으 로 보 냄</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">*축 복 기 도</td><td class="col-content" id="pv-w_blessText">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘.</td></tr>
+              <tr><td class="col-label">*응 답 송</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">*징 울 림</td><td class="col-content"></td></tr>
+            </table>
+
+            <div class="part2-header">
+              <h3>2부∶그리스도인의 사귐 <span class="sub">(공동관심사 나눔)</span></h3>
+            </div>
+
+            <div class="servant-section-title">&lt; 예배위원 / 봉사자 안내 &gt;</div>
+            <table class="servant-table">
+              <thead>
+                <tr>
+                  <th style="width:15%;">날짜</th><th style="width:17%;">인도</th><th style="width:17%;">목회기도</th><th style="width:17%;">성서읽기</th><th style="width:17%;">하늘뜻펴기</th><th style="width:17%;">감사기도</th>
+                </tr>
+              </thead>
+              <tbody id="pv-servant-tbody">
+                <!-- JS 갱신 -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 4페이지 공동관심사 1 -->
+          <div class="page page-4" id="page4">
+            <div class="tab-gray-banner">
+              <div class="gray-blocks"><span></span><span></span><span></span><span></span><span></span></div>
+              <div class="banner-title">공동관심사 나눔</div>
+            </div>
+
+            <div class="ann-section">
+              <div class="ann-title-banner">1. 오늘 일정 안내</div>
+              <div class="ann-list" id="pv-ann1"></div>
+            </div>
+            <div class="ann-section">
+              <div class="ann-title-banner">2. 교우 소식</div>
+              <div class="ann-list" id="pv-ann2"></div>
+            </div>
+            <div class="ann-section">
+              <div class="ann-title-banner">3. 함께 만드는 향린</div>
+              <div class="ann-list" id="pv-ann3"></div>
+            </div>
+            <div class="ann-section">
+              <div class="ann-title-banner">4. 이번주 일정 안내</div>
+              <div class="ann-list" id="pv-ann4"></div>
+            </div>
+          </div>
+
+          <!-- 5페이지 공동관심사 2 -->
+          <div class="page page-5" id="page5">
+            <div class="ann-section">
+              <div class="ann-title-banner">5. 이후 일정 안내</div>
+              <div class="ann-list" id="pv-ann5"></div>
+            </div>
+            <div class="ann-section">
+              <div class="ann-title-banner">6. 에큐메니칼 소식</div>
+              <div class="ann-list" id="pv-ann6"></div>
+            </div>
+            <div class="ann-section">
+              <div class="ann-title-banner">7. 감사헌금</div>
+              <div class="ann-list" id="pv-ann7"></div>
+            </div>
+
+            <div class="black-bar" id="pv-onlineText">【온라인헌금 안내】 KEB하나은행 024-22-02085-6 향린교회</div>
+            <div class="gray-bar" id="pv-carbonText">【교회탄소중립】 7월전기 사용량 5.86MWh / 생산량 1.08MWh</div>
+
+            <div class="pledge-box">
+              <div class="pledge-title">&lt; 향린교인 생활실천 다짐 &gt;</div>
+              <div class="pledge-text" id="pv-pledgeText">6. 우리는 누구에게나 햇빛과 비를 주셔서...</div>
+            </div>
+          </div>
+
+          <!-- 6페이지 향린 정보 -->
+          <div class="page page-6" id="page6">
+            <div class="outer-border-box">
+              <div>
+                <h4>향린을 섬기는 사람들</h4>
+                <div class="info-list-text" id="pv-info_servants"></div>
+              </div>
+              <div>
+                <h4>향린 공동체 교회</h4>
+                <div class="info-list-text" id="pv-info_churches"></div>
+              </div>
+              <div>
+                <h4>도시농촌 선교협력교회(결연 31년)</h4>
+                <div class="info-list-text" id="pv-info_coop"></div>
+              </div>
+              <div class="inner-border-box">
+                <h4 style="border:none; font-size:14pt; margin-bottom:2px;">교육부 예배장소 안내</h4>
+                <div class="info-list-text" id="pv-info_edu" style="font-size:12.5pt;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7페이지 방문안내 & 기도나눔 -->
+          <div class="page page-7" id="page7">
+            <div class="inner-border-box" style="margin-bottom:12px; padding:12px;">
+              <div style="text-align:center; font-weight:bold; font-size:14pt; margin-bottom:6px;">† 향린교회를 방문하신 여러분을 환영합니다. †</div>
+              <div class="info-list-text" id="pv-pray_welcome" style="font-size:13pt; line-height:1.5;"></div>
+            </div>
+
+            <div class="prayer-banner-red">▮▮ 기도 나눔으로 하나가 되는 공동체 ▮▮</div>
+
+            <div class="prayer-section-title">▯등록 새교우</div>
+            <table class="prayer-table" id="pv-pray_table">
+              <!-- JS dynamically generates 4-column cells -->
+            </table>
+
+            <div class="prayer-section-title">▯건강회복을 위해</div>
+            <div class="info-list-text" id="pv-pray_health" style="font-size:13pt; margin-bottom:8px;"></div>
+
+            <div class="prayer-section-title">▯군복무 중 건강과 안전을 위해</div>
+            <div class="info-list-text" id="pv-pray_military" style="font-size:13pt; margin-bottom:8px;"></div>
+
+            <div class="prayer-section-title">▯해외 체류 중인 교우들을 위해</div>
+            <div class="info-list-text" id="pv-pray_overseas" style="font-size:13pt;"></div>
+          </div>
+
+          <!-- 8페이지 목회마당 -->
+          <div class="page page-8" id="page8">
+            <div class="poster-header-banner">목 회 마 당</div>
+            <div class="poster-container-full" id="pv-poster-box">
+              <span id="pv-poster-placeholder" style="color:#adb5bd;">목회마당 포스터 업로드 영역</span>
+              <img id="pv-poster-img" src="" alt="목회마당 포스터" class="hidden">
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    let juboImages = { cover: '', logo: '', calli: '', sheetMusic: '', poster: '' };
+
+    function switchTab(tabId, evt) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      if(evt && evt.currentTarget) evt.currentTarget.classList.add('active');
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+    }
+
+    function handleImageUpload(type, event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          juboImages[type] = e.target.result;
+          renderImage(type, e.target.result);
+          autoSaveToLocalStorage();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function renderImage(type, src) {
+      if (!src) return;
+      if (type === 'cover') {
+        const img = document.getElementById('pv-cover-img');
+        const ph = document.getElementById('pv-cover-placeholder');
+        const box = document.getElementById('pv-cover-box');
+        img.src = src; img.classList.remove('hidden'); ph.style.display = 'none'; box.classList.add('has-image');
+      } else if (type === 'logo') {
+        document.getElementById('pv-logo-img').src = src;
+      } else if (type === 'calli') {
+        document.getElementById('pv-calli-img').src = src;
+      } else if (type === 'sheetMusic') {
+        const img = document.getElementById('pv-sheet-img');
+        const ph = document.getElementById('pv-sheet-placeholder');
+        img.src = src; img.classList.remove('hidden'); ph.style.display = 'none';
+      } else if (type === 'poster') {
+        const img = document.getElementById('pv-poster-img');
+        const ph = document.getElementById('pv-poster-placeholder');
+        img.src = src; img.classList.remove('hidden'); ph.style.display = 'none';
+      }
+    }
+
+    function autoSaveToLocalStorage() {
+      const data = getFormData();
+      try { localStorage.setItem('hyanglin_jubo_v2_data', JSON.stringify(data)); } catch(e) {}
+    }
+
+    function getFormData() {
+      const fields = [
+        'foundationYear', 'unificationYear', 'worshipDate', 'worshipSeason', 'motto1', 'motto2', 'coverSummary', 'denomText', 'churchInfoText',
+        'w_call', 'w_openSong', 'w_glorySong', 'w_gloryText', 'w_choirTitle', 'w_choirComposer', 'w_choirLyrics', 'w_scripture', 'w_togetherRef', 'w_togetherText',
+        'w_meditationSong', 'w_gospelRef', 'w_sermonTitle', 'w_creedSong', 'w_thanksSong', 'w_decisionSong', 'w_blessText',
+        'servant_row1', 'servant_row2', 'servant_row3', 'servant_duty',
+        'ann_sec1', 'ann_sec2', 'ann_sec3', 'ann_sec4', 'ann_sec5', 'ann_sec6', 'ann_sec7', 'ann_onlineText', 'ann_carbonText', 'ann_pledgeText',
+        'info_servants', 'info_churches', 'info_coop', 'info_edu',
+        'pray_welcome', 'pray_newCommers', 'pray_health', 'pray_military', 'pray_overseas'
+      ];
+      let formData = { images: juboImages };
+      fields.forEach(id => { const el = document.getElementById(id); if (el) formData[id] = el.value; });
+      return formData;
+    }
+
+    function saveJuboData() {
+      const data = getFormData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url;
+      a.download = `향린주보데이터_${document.getElementById('worshipDate').value}.json`;
+      a.click(); URL.revokeObjectURL(url);
+    }
+
+    function loadJuboData(event) {
+      const file = event.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try { restoreData(JSON.parse(e.target.result)); } catch(err) { alert('파일 불러오기 오류'); }
+      };
+      reader.readAsText(file);
+    }
+
+    function restoreData(data) {
+      if (!data) return;
+      Object.keys(data).forEach(key => {
+        if (key === 'images') {
+          juboImages = data.images || {};
+          Object.keys(juboImages).forEach(t => renderImage(t, juboImages[t]));
+        } else {
+          const el = document.getElementById(key); if (el) el.value = data[key];
+        }
+      });
+      updatePreview();
+    }
+
+    function updatePreview() {
+      // 1페이지
+      document.getElementById('pv-foundation').innerText = `창립 ${document.getElementById('foundationYear').value}주년`;
+      document.getElementById('pv-unification').innerText = `통일염원 ${document.getElementById('unificationYear').value}년`;
+      document.getElementById('pv-date').innerText = document.getElementById('worshipDate').value;
+      const seasonVal = document.getElementById('worshipSeason').value;
+      document.getElementById('pv-season').innerText = seasonVal;
+      document.querySelectorAll('.pv-season-sub').forEach(el => el.innerText = seasonVal);
+
+      document.getElementById('pv-motto1').innerText = document.getElementById('motto1').value;
+      document.getElementById('pv-motto2').innerText = document.getElementById('motto2').value;
+      document.getElementById('pv-coverSummary').innerHTML = document.getElementById('coverSummary').value.replace(/\n/g, '<br>');
+      
+      const denomRaw = document.getElementById('denomText').value;
+      document.getElementById('pv-denomText').innerHTML = denomRaw.replace(/\n/g, '<br>');
+
+      const addrRaw = document.getElementById('churchInfoText').value.split('\n');
+      if (addrRaw.length >= 3) {
+        let line2Parts = addrRaw[1].trim().split(/\s+/);
+        let line3Parts = addrRaw[2].trim().split(/\s+/);
+        document.getElementById('pv-address-box').innerHTML = `
+          <div class="address-row">${addrRaw[0]}</div>
+          <div class="address-split-row"><span>${line2Parts[0] || ''}</span><span>${line2Parts[1] || ''}</span></div>
+          <div class="address-split-row"><span>${addrRaw[2].split('전송')[0] || ''}</span><span>${'전송' + (addrRaw[2].split('전송')[1] || '')}</span></div>
+        `;
+      } else {
+        document.getElementById('pv-address-box').innerHTML = addrRaw.join('<br>');
+      }
+
+      // 2페이지 & 3페이지 예배
+      document.getElementById('pv-w_call').innerText = document.getElementById('w_call').value;
+      document.getElementById('pv-w_openSong').innerText = document.getElementById('w_openSong').value;
+      document.getElementById('pv-w_glorySong').innerText = document.getElementById('w_glorySong').value;
+      document.getElementById('pv-w_gloryText').innerText = document.getElementById('w_gloryText').value;
+      document.getElementById('pv-w_choirTitle').innerText = document.getElementById('w_choirTitle').value;
+      document.getElementById('pv-w_choirComposer').innerText = document.getElementById('w_choirComposer').value;
+      document.getElementById('pv-w_choirLyrics').innerHTML = document.getElementById('w_choirLyrics').value.replace(/\n/g, '<br>');
+      document.getElementById('pv-w_scripture').innerText = document.getElementById('w_scripture').value;
+      document.getElementById('pv-w_togetherRef').innerText = document.getElementById('w_togetherRef').value;
+      document.getElementById('pv-w_togetherText').innerHTML = document.getElementById('w_togetherText').value.replace(/\n/g, '<br>');
+
+      document.getElementById('pv-w_meditationSong').innerText = document.getElementById('w_meditationSong').value;
+      document.getElementById('pv-w_gospelRef').innerText = document.getElementById('w_gospelRef').value;
+      document.getElementById('pv-w_sermonTitle').innerText = document.getElementById('w_sermonTitle').value;
+      document.getElementById('pv-w_creedSong').innerText = document.getElementById('w_creedSong').value;
+      document.getElementById('pv-w_thanksSong').innerText = document.getElementById('w_thanksSong').value;
+      document.getElementById('pv-w_decisionSong').innerText = document.getElementById('w_decisionSong').value;
+      document.getElementById('pv-w_blessText').innerText = document.getElementById('w_blessText').value;
+
+      // 3페이지 예배위원 표
+      const r1 = document.getElementById('servant_row1').value.split('|').map(s=>s.trim());
+      const r2 = document.getElementById('servant_row2').value.split('|').map(s=>s.trim());
+      const r3 = document.getElementById('servant_row3').value.split('|').map(s=>s.trim());
+      const duty = document.getElementById('servant_duty').value.replace(/\n/g, '<br>');
+
+      document.getElementById('pv-servant-tbody').innerHTML = `
+        <tr><td>${r1[0]||''}</td><td>${r1[1]||''}</td><td>${r1[2]||''}</td><td>${r1[3]||''}</td><td>${r1[4]||''}</td><td>${r1[5]||''}</td></tr>
+        <tr><td>${r2[0]||''}</td><td>${r2[1]||''}</td><td>${r2[2]||''}</td><td>${r2[3]||''}</td><td>${r2[4]||''}</td><td>${r2[5]||''}</td></tr>
+        <tr><td>${r3[0]||''}</td><td>${r3[1]||''}</td><td>${r3[2]||''}</td><td>${r3[3]||''}</td><td>${r3[4]||''}</td><td>${r3[5]||''}</td></tr>
+        <tr><td colspan="6" class="duty-row"><strong>주일봉사:</strong> ${duty}</td></tr>
+      `;
+
+      // 4페이지 & 5페이지 공동관심사
+      for (let i = 1; i <= 7; i++) {
+        const val = document.getElementById(`ann_sec${i}`).value;
+        const formatted = val.split('\n').map(line => {
+          if (!line.trim()) return '';
+          return `<div class="ann-item">${line.startsWith('∙') ? line : '∙ ' + line}</div>`;
+        }).join('');
+        document.getElementById(`pv-ann${i}`).innerHTML = formatted;
+      }
+      document.getElementById('pv-onlineText').innerText = document.getElementById('ann_onlineText').value;
+      document.getElementById('pv-carbonText').innerText = document.getElementById('ann_carbonText').value;
+      document.getElementById('pv-pledgeText').innerText = document.getElementById('ann_pledgeText').value;
+
+      // 6페이지 향린 정보
+      document.getElementById('pv-info_servants').innerText = document.getElementById('info_servants').value;
+      document.getElementById('pv-info_churches').innerText = document.getElementById('info_churches').value;
+      document.getElementById('pv-info_coop').innerText = document.getElementById('info_coop').value;
+      document.getElementById('pv-info_edu').innerText = document.getElementById('info_edu').value;
+
+      // 7페이지 기도/방문
+      document.getElementById('pv-pray_welcome').innerText = document.getElementById('pray_welcome').value;
+      document.getElementById('pv-pray_health').innerText = document.getElementById('pray_health').value;
+      document.getElementById('pv-pray_military').innerText = document.getElementById('pray_military').value;
+      document.getElementById('pv-pray_overseas').innerText = document.getElementById('pray_overseas').value;
+
+      // 새교우 4열 표 렌더링
+      const commers = document.getElementById('pray_newCommers').value.split(',').map(s=>s.trim()).filter(s=>s);
+      let tableHtml = '';
+      for (let i = 0; i < commers.length; i += 4) {
+        tableHtml += '<tr>';
+        for (let j = 0; j < 4; j++) {
+          tableHtml += `<td>${commers[i + j] || ''}</td>`;
+        }
+        tableHtml += '</tr>';
+      }
+      document.getElementById('pv-pray_table').innerHTML = tableHtml;
+
+      autoSaveToLocalStorage();
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById('juboPaper');
+      html2pdf().set({
+        margin: 0,
+        filename: `향린교회_주보_${document.getElementById('worshipDate').value}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { format: 'a4', orientation: 'portrait' }
+      }).from(element).save();
+    }
+
+    function scrollToPage(pageNum) {
+      const target = document.getElementById(`page${pageNum}`);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.onload = function() {
+      const saved = localStorage.getItem('hyanglin_jubo_v2_data');
+      if (saved) {
+        try { restoreData(JSON.parse(saved)); } catch(e) { updatePreview(); }
+      } else {
+        updatePreview();
+      }
+    };
+  </script>
+</body>
+</html>
