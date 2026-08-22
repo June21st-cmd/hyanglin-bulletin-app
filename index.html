@@ -96,21 +96,22 @@
     .address-split-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
     /* 2페이지 & 3페이지 예배 헤더 및 * 안내문 */
-    .section-header-red-container { border-bottom: 2px solid #000; padding-bottom: 2px; margin-bottom: 8px; }
+    .section-header-red-container { border-bottom: 2px solid #000; padding-bottom: 2px; margin-bottom: 6px; }
     .section-header-red { display: flex; justify-content: space-between; align-items: flex-end; }
-    .section-header-red h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: underline; font-family: 'Gowun Batang', serif; }
-    .section-header-red h3 span.sub { font-size: 17pt; text-decoration: none; font-weight: normal; margin-left: 6px; }
-    .header-asterisk-subrow { text-align: right; font-size: 9pt; color: #000; font-weight: normal; margin-top: 2px; }
+    .section-header-red h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: none; font-family: 'Gowun Batang', serif; } /* 밑줄 제거 */
+    .section-header-red h3 span.sub { font-size: 17pt; text-decoration: none; font-weight: normal; margin-left: 6px; font-family: 'Noto Sans KR', sans-serif; } /* 괄호 안 절기 고딕체 */
+    .header-asterisk-subrow { text-align: right; font-size: 11.5pt; color: #000; font-weight: 500; margin-top: 4px; font-family: 'Noto Sans KR', sans-serif; } /* 구분선 다음 우측정렬, +2pt 키움 */
 
-    /* 2페이지 & 3페이지 예배 순서 표 & Zebra Striping */
+    /* 2페이지 & 3페이지 예배 순서 표 및 항목명 중심 순서 구분 */
     .worship-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; }
-    .worship-table tr:nth-child(even) { background-color: #F5F5F5; } /* 교대 옅은 회색 배경 */
-    .worship-table tr:nth-child(odd) { background-color: #FFFFFF; }
-    .worship-table td { vertical-align: top; padding: 4px 6px; font-size: 15.5pt; line-height: 1.5; }
+    .worship-table tr { border-bottom: 1px dashed #e9ecef; } /* 순서 사이 미세 구분을 위한 하단 구분선 */
+    .worship-table td { vertical-align: top; padding: 5px 6px; font-size: 15.5pt; line-height: 1.5; }
     
-    /* 항목명 셀 x좌표 고정 (* 포함 42mm 고정) */
-    .worship-table .col-label { width: 42mm; min-width: 42mm; max-width: 42mm; font-size: 14pt; font-weight: bold; letter-spacing: 1px; text-align: left; padding-right: 4px; white-space: nowrap; box-sizing: border-box; }
-    .worship-table .col-content { width: auto; word-break: keep-all; }
+    /* 항목명 제목 셀에 교대 구분 및 입체감 부여 */
+    .worship-table tr:nth-child(even) .col-label { background-color: #f1f3f5; }
+    .worship-table tr:nth-child(odd) .col-label { background-color: #f8f9fa; }
+    .worship-table .col-label { width: 42mm; min-width: 42mm; max-width: 42mm; font-size: 14pt; font-weight: bold; letter-spacing: 1px; text-align: left; padding: 4px 8px; white-space: nowrap; box-sizing: border-box; border-radius: 3px; }
+    .worship-table .col-content { width: auto; word-break: keep-all; padding-left: 10px; }
     .worship-subtext { font-size: 13pt; color: #333; margin-top: 2px; }
     .sheet-music-box { width: 100%; height: 48mm; border: 1px dashed #adb5bd; background: #f8f9fa; display: flex; align-items: center; justify-content: center; margin: 4px 0; }
     .sheet-music-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
