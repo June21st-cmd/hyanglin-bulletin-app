@@ -366,6 +366,7 @@
         <!-- 2p 예배1 설정 -->
         <div id="tab-worship1" class="tab-content">
           <h3>2페이지 (1부 주일예배 1)</h3>
+          <div class="form-group"><label>예배 절기 (2페이지 헤더)</label><input type="text" id="worshipSeason2" value="성령강림 후 열두째주일" oninput="updatePreview()"></div>
           <div class="form-group"><label>예배부름</label><input type="text" id="w_call" value="시편 67:4-5" oninput="updatePreview()"></div>
           <div class="form-group"><label>여는찬송</label><input type="text" id="w_openSong" value="찬송 324장 (예수 나를 오라 하네)" oninput="updatePreview()"></div>
           <div class="form-group"><label>교독송 악보 이미지 업로드</label><input type="file" accept="image/*" onchange="handleImageUpload('sheetMusic', event)"></div>
@@ -792,7 +793,7 @@
 
     function getFormData() {
       const fields = [
-        'foundationYear', 'unificationYear', 'worshipDate', 'worshipSeason', 'motto1', 'motto2', 'coverSummary', 'denomText', 'churchInfoText',
+        'foundationYear', 'unificationYear', 'worshipDate', 'worshipSeason', 'worshipSeason2', 'motto1', 'motto2', 'coverSummary', 'denomText', 'churchInfoText',
         'w_call', 'w_openSong', 'w_glorySong', 'w_gloryText', 'w_choirTitle', 'w_choirComposer', 'w_choirLyrics', 'w_scripture', 'w_togetherRef', 'w_togetherText',
         'w_meditationSong', 'w_gospelRef', 'w_sermonTitle', 'w_creedSong', 'w_thanksSong', 'w_decisionSong', 'w_blessText',
         'servant_row1', 'servant_row2', 'servant_row3', 'servant_duty',
@@ -837,9 +838,10 @@
           }
         }
       });
-      // 1페이지 절기 서체 바인딩
+      // 2페이지 절기 서체/텍스트 바인딩
       const seasonSub = document.querySelector('.pv-season-sub');
-      if (seasonSub && data['worshipSeason']) seasonSub.innerText = data['worshipSeason'];
+      const seasonVal = data['worshipSeason2'] || data['worshipSeason'];
+      if (seasonSub && seasonVal) seasonSub.innerText = seasonVal;
     }
 
     function restoreData(data) {
