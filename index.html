@@ -59,6 +59,7 @@
       padding: 17mm 11mm 17mm 12mm; /* 상 17mm, 우 11mm, 하 17mm, 좌 12mm */
       position: relative; box-sizing: border-box;
       font-family: 'Gowun Batang', 'Batang', serif; color: #000000; overflow: hidden;
+      page-break-after: always; page-break-inside: avoid;
     }
 
     /* 1페이지 표지 */
@@ -74,28 +75,38 @@
     .cover-photo-box.has-image { border: none !important; background: transparent !important; }
     .cover-img-fit { width: 100% !important; height: 100% !important; object-fit: contain !important; display: block; margin: 0 auto; }
     .cover-placeholder-text { text-align: center; color: #adb5bd; font-size: 0.95rem; font-family: 'Noto Sans KR', sans-serif; line-height: 1.5; }
-    .cover-summary-centered { font-size: 11pt; font-family: 'Gowun Batang', serif; text-align: center; line-height: 1.6; margin: 8px 0 12px; color: #000; letter-spacing: -0.5px; height: 16mm; display: flex; align-items: center; justify-content: center; }
+    
+    /* 대문 사진 설명: 약 13pt로 키움 */
+    .cover-summary-centered { font-size: 13pt; font-family: 'Gowun Batang', serif; text-align: center; line-height: 1.6; margin: 6px 0 10px; color: #000; letter-spacing: -0.5px; height: 16mm; display: flex; align-items: center; justify-content: center; }
 
     .church-footer-stacked { display: flex; flex-direction: column; align-items: center; width: 100%; position: absolute; bottom: 17mm; left: 12mm; right: 11mm; width: calc(100% - 23mm); }
     .footer-top-brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; height: 30mm; }
     .brand-logo-img { height: 28mm !important; width: auto; object-fit: contain; }
     .brand-denom-text { font-size: 16pt; font-weight: bold; line-height: 1.4; color: #FF0000; text-align: center; letter-spacing: 3px; font-family: 'Gowun Batang', serif; white-space: pre-line; min-width: 120px; }
     .brand-calli-img { height: 21mm !important; width: auto; object-fit: contain; }
-    .footer-bottom-address { font-size: 10.5pt; text-align: center; line-height: 1.5; color: #000; font-family: 'Gowun Batang', serif; width: 100%; letter-spacing: -0.5px; }
-    .address-row { margin-bottom: 2px; }
-    .address-split-row { display: flex; justify-content: space-between; padding: 0 10px; margin-bottom: 2px; }
+    
+    /* 교회 정보: 약 11.5pt 및 첫째줄 폭 기준 양끝정렬 컨테이너 */
+    .footer-bottom-address { font-size: 11.5pt; text-align: center; line-height: 1.5; color: #000; font-family: 'Gowun Batang', serif; width: 100%; letter-spacing: -0.4px; display: flex; flex-direction: column; align-items: center; }
+    .address-wrapper { display: inline-block; width: 100%; max-width: 440px; } /* 첫째 줄 주소 폭에 맞춘 너비 제한 */
+    .address-row { text-align: center; margin-bottom: 2px; white-space: nowrap; }
+    .address-split-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
-    /* 헤더 일반 (2페이지 이후) */
-    .section-header-red { border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; }
+    /* 2페이지 & 3페이지 예배 헤더 및 * 안내문 */
+    .section-header-red-container { border-bottom: 2px solid #000; padding-bottom: 2px; margin-bottom: 8px; }
+    .section-header-red { display: flex; justify-content: space-between; align-items: flex-end; }
     .section-header-red h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: underline; font-family: 'Gowun Batang', serif; }
     .section-header-red h3 span.sub { font-size: 17pt; text-decoration: none; font-weight: normal; margin-left: 6px; }
-    .right-asterisk { font-size: 10pt; font-weight: normal; color: #000; }
+    .header-asterisk-subrow { text-align: right; font-size: 9pt; color: #000; font-weight: normal; margin-top: 2px; }
 
-    /* 2페이지 & 3페이지 예배 순서 표 */
-    .worship-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed; }
-    .worship-table td { vertical-align: top; padding: 3px 0; font-size: 15.5pt; line-height: 1.5; }
-    .worship-table .col-label { width: 42mm; font-size: 14pt; font-weight: bold; letter-spacing: 2px; text-align: justify; text-justify: inter-character; padding-right: 8px; white-space: nowrap; }
-    .worship-table .col-content { width: auto; }
+    /* 2페이지 & 3페이지 예배 순서 표 & Zebra Striping */
+    .worship-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; table-layout: fixed; }
+    .worship-table tr:nth-child(even) { background-color: #F5F5F5; } /* 교대 옅은 회색 배경 */
+    .worship-table tr:nth-child(odd) { background-color: #FFFFFF; }
+    .worship-table td { vertical-align: top; padding: 4px 6px; font-size: 15.5pt; line-height: 1.5; }
+    
+    /* 항목명 셀 x좌표 고정 (* 포함 42mm 고정) */
+    .worship-table .col-label { width: 42mm; min-width: 42mm; max-width: 42mm; font-size: 14pt; font-weight: bold; letter-spacing: 1px; text-align: left; padding-right: 4px; white-space: nowrap; box-sizing: border-box; }
+    .worship-table .col-content { width: auto; word-break: keep-all; }
     .worship-subtext { font-size: 13pt; color: #333; margin-top: 2px; }
     .sheet-music-box { width: 100%; height: 48mm; border: 1px dashed #adb5bd; background: #f8f9fa; display: flex; align-items: center; justify-content: center; margin: 4px 0; }
     .sheet-music-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
@@ -104,10 +115,14 @@
     .part2-header { border-bottom: 2px solid #000; padding-bottom: 4px; margin: 16px 0 10px; }
     .part2-header h3 { font-size: 21pt; color: #FF0000; font-weight: bold; text-decoration: underline; }
     .servant-section-title { text-align: center; font-size: 14pt; font-weight: bold; margin: 12px 0 8px; }
-    .servant-table { width: 100%; border-collapse: collapse; font-size: 15pt; text-align: center; margin-bottom: 8px; }
-    .servant-table th, .servant-table td { border: 0.12mm solid #000000; padding: 6px 4px; }
+    
+    .servant-table { width: 100%; border-collapse: collapse; font-size: 13pt; text-align: center; margin-bottom: 12px; table-layout: fixed; }
+    .servant-table th, .servant-table td { border: 0.12mm solid #000000; padding: 6px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.5px; }
     .servant-table th { background: #D9D9D9; font-weight: bold; }
-    .servant-table .duty-row { text-align: left; padding: 6px 8px; font-size: 13.5pt; line-height: 1.5; }
+    
+    /* 주일봉사 독립 텍스트 블록 */
+    .servant-duty-block { font-size: 13.5pt; line-height: 1.6; margin-top: 8px; padding: 6px 4px; letter-spacing: -0.3px; word-break: keep-all; }
+    .servant-duty-block strong { font-weight: bold; }
 
     /* 4페이지 & 5페이지 공동관심사 */
     .tab-gray-banner { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 14px; }
@@ -263,7 +278,7 @@
           <div class="form-group"><label>향린교인 생활실천 다짐 내용</label><textarea id="ann_pledgeText" rows="3" oninput="updatePreview()">6. 우리는 누구에게나 햇빛과 비를 주셔서 평등하게 사랑하시는 하나님을 믿으며, 교회와 가정, 직장 등 모든 관계에서 차별적 언어나 행위를 하지 않도록 민감하게 성찰하며 행동한다.</textarea></div>
         </div>
 
-        <!-- 6p 향린정보 설정 -->
+        <!-- 6p 향린 정보 -->
         <div id="tab-info" class="tab-content">
           <h3>6페이지 (향린 정보)</h3>
           <div class="form-group"><label>향린을 섬기는 사람들</label><textarea id="info_servants" rows="6" oninput="updatePreview()">· 담임목사 : 한문덕
@@ -330,25 +345,29 @@
                 <img id="pv-calli-img" src="" alt="향린교회 캘리" class="brand-calli-img">
               </div>
               <div class="footer-bottom-address" id="pv-address-box">
-                <div class="address-row" id="pv-address-line1">주소 : 서울시 종로구 경희궁2길 11 (내수동 110-5)</div>
-                <div class="address-split-row"><span>http://www.hyanglin.org</span><span>hyanglin24@gmail.com</span></div>
-                <div class="address-split-row"><span>전화: 776-3806, 9141</span><span>전송: 776-2761</span></div>
+                <div class="address-wrapper">
+                  <div class="address-row" id="pv-address-line1">주소 : 서울시 종로구 경희궁2길 11 (내수동 110-5)</div>
+                  <div class="address-split-row"><span>http://www.hyanglin.org</span><span>hyanglin24@gmail.com</span></div>
+                  <div class="address-split-row"><span>전화: 776-3806, 9141</span><span>전송: 776-2761</span></div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- 2페이지 1부 주일예배 1 -->
           <div class="page page-2" id="page2">
-            <div class="section-header-red">
-              <h3>1부∶주일예배 <span class="sub">(<span class="pv-season-sub">성령강림 후 열두째주일</span>)</span></h3>
-              <span class="right-asterisk">* 표는 일어남</span>
+            <div class="section-header-red-container">
+              <div class="section-header-red">
+                <h3>1부∶주일예배 <span class="sub">(<span class="pv-season-sub">성령강림 후 열두째주일</span>)</span></h3>
+              </div>
+              <div class="header-asterisk-subrow">* 표는 일어남</div>
             </div>
             <table class="worship-table">
               <tr><td class="col-label">징 울 림</td><td class="col-content"></td></tr>
               <tr><td class="col-label">예 배 부 름</td><td class="col-content" id="pv-w_call">시편 67:4-5</td></tr>
-              <tr><td class="col-label">*여 는 찬 송</td><td class="col-content" id="pv-w_openSong">찬송 324장 (예수 나를 오라 하네)</td></tr>
+              <tr><td class="col-label">* 여 는 찬 송</td><td class="col-content" id="pv-w_openSong">찬송 324장 (예수 나를 오라 하네)</td></tr>
               <tr>
-                <td class="col-label">*교 독 송</td>
+                <td class="col-label">* 교 독 송</td>
                 <td class="col-content">
                   <div class="sheet-music-box" id="pv-sheet-box">
                     <span id="pv-sheet-placeholder" style="font-size:0.9rem; color:#888;">교독송 악보 이미지 업로드 영역</span>
@@ -357,7 +376,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="col-label">*영 광 송</td>
+                <td class="col-label">* 영 광 송</td>
                 <td class="col-content">
                   <span id="pv-w_glorySong">국악찬송 5장</span>
                   <div class="worship-subtext" id="pv-w_gloryText">성부 성자와 성령 영원히 영광 받으소서 태초부터 지금까지 영광 영광 아멘</div>
@@ -387,16 +406,16 @@
           <div class="page page-3" id="page3">
             <table class="worship-table">
               <tr><td class="col-label">말 씀 묵 상 송</td><td class="col-content" id="pv-w_meditationSong">국악찬송 13장</td></tr>
-              <tr><td class="col-label">*복 음 서 읽 기</td><td class="col-content" id="pv-w_gospelRef">마가복음서 4:35-41</td></tr>
+              <tr><td class="col-label">* 복 음 서 읽 기</td><td class="col-content" id="pv-w_gospelRef">마가복음서 4:35-41</td></tr>
               <tr><td class="col-label">하 늘 뜻 펴 기</td><td class="col-content"><strong id="pv-w_sermonTitle">“바다 저쪽으로 건너가자”</strong></td></tr>
               <tr><td class="col-label">신 앙 고 백 송</td><td class="col-content" id="pv-w_creedSong">국악찬송 254장</td></tr>
-              <tr><td class="col-label">*감 사 송</td><td class="col-content" id="pv-w_thanksSong">국악찬송 21장</td></tr>
-              <tr><td class="col-label">*감 사 기 도</td><td class="col-content"></td></tr>
-              <tr><td class="col-label">*결 단 찬 송</td><td class="col-content" id="pv-w_decisionSong">국악찬송 222장 (하나님을 믿는 자)</td></tr>
-              <tr><td class="col-label">*세 상 으 로 보 냄</td><td class="col-content"></td></tr>
-              <tr><td class="col-label">*축 복 기 도</td><td class="col-content" id="pv-w_blessText">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘.</td></tr>
-              <tr><td class="col-label">*응 답 송</td><td class="col-content"></td></tr>
-              <tr><td class="col-label">*징 울 림</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">* 감 사 송</td><td class="col-content" id="pv-w_thanksSong">국악찬송 21장</td></tr>
+              <tr><td class="col-label">* 감 사 기 도</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">* 결 단 찬 송</td><td class="col-content" id="pv-w_decisionSong">국악찬송 222장 (하나님을 믿는 자)</td></tr>
+              <tr><td class="col-label">* 세 상 으 로 보 냄</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">* 축 복 기 도</td><td class="col-content" id="pv-w_blessText">주 예수 그리스도의 은총과 하나님의 사랑과 성령께서 이루어 주시는 친교가 우리 가운데 영원토록 함께 있기를 주님의 이름으로 축원합니다. 아멘.</td></tr>
+              <tr><td class="col-label">* 응 답 송</td><td class="col-content"></td></tr>
+              <tr><td class="col-label">* 징 울 림</td><td class="col-content"></td></tr>
             </table>
 
             <div class="part2-header">
@@ -407,13 +426,16 @@
             <table class="servant-table">
               <thead>
                 <tr>
-                  <th style="width:15%;">날짜</th><th style="width:17%;">인도</th><th style="width:17%;">목회기도</th><th style="width:17%;">성서읽기</th><th style="width:17%;">하늘뜻펴기</th><th style="width:17%;">감사기도</th>
+                  <th style="width:14%;">날짜</th><th style="width:17.2%;">인도</th><th style="width:17.2%;">목회기도</th><th style="width:17.2%;">성서읽기</th><th style="width:17.2%;">하늘뜻펴기</th><th style="width:17.2%;">감사기도</th>
                 </tr>
               </thead>
               <tbody id="pv-servant-tbody">
                 <!-- JS 갱신 -->
               </tbody>
             </table>
+            <div class="servant-duty-block" id="pv-servant-duty-block">
+              <!-- JS 갱신 -->
+            </div>
           </div>
 
           <!-- 4페이지 공동관심사 1 -->
@@ -687,11 +709,12 @@
       const addrRaw = document.getElementById('churchInfoText').value.split('\n');
       if (addrRaw.length >= 3) {
         let line2Parts = addrRaw[1].trim().split(/\s+/);
-        let line3Parts = addrRaw[2].trim().split(/\s+/);
         document.getElementById('pv-address-box').innerHTML = `
-          <div class="address-row">${addrRaw[0]}</div>
-          <div class="address-split-row"><span>${line2Parts[0] || ''}</span><span>${line2Parts[1] || ''}</span></div>
-          <div class="address-split-row"><span>${addrRaw[2].split('전송')[0] || ''}</span><span>${'전송' + (addrRaw[2].split('전송')[1] || '')}</span></div>
+          <div class="address-wrapper">
+            <div class="address-row">${addrRaw[0]}</div>
+            <div class="address-split-row"><span>${line2Parts[0] || ''}</span><span>${line2Parts[1] || ''}</span></div>
+            <div class="address-split-row"><span>${addrRaw[2].split('전송')[0] || ''}</span><span>${'전송' + (addrRaw[2].split('전송')[1] || '')}</span></div>
+          </div>
         `;
       } else {
         document.getElementById('pv-address-box').innerHTML = addrRaw.join('<br>');
