@@ -320,6 +320,11 @@
 
     /* ===== PDF 다운로드 / 인쇄 전용 @media print (8페이지 Exact A4 1:1 완벽 보장) ===== */
     @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
       @page {
         size: A4 portrait;
         margin: 0 !important; /* 상하좌우 프린터 여백 0으로 완전 제거 */
@@ -343,19 +348,29 @@
       }
       .page {
         width: 210mm !important;
-        height: 295mm !important; /* 297mm 대신 295mm로 안전 상한선을 두어 2장 쪼개짐 원천 차단 */
+        height: 297mm !important;
         min-width: 210mm !important;
         max-width: 210mm !important;
-        max-height: 295mm !important;
+        max-height: 297mm !important;
         box-shadow: none !important;
         margin: 0 auto !important;
-        padding: 14mm 11mm 17mm 12mm !important; /* 상단 착시 보정 14mm 지정 */
+        padding: 14mm 11mm 17mm 12mm !important; /* 상단 보정 14mm 지정 */
         page-break-after: always !important;
         page-break-inside: avoid !important;
         break-after: page !important;
         break-inside: avoid !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
+      }
+      .page:last-child {
+        page-break-after: auto !important;
+        break-after: auto !important;
+      }
+      .worship-table td {
+        vertical-align: top !important;
+      }
+      .col-asterisk {
+        padding-top: 4px !important;
       }
     }
   </style>
