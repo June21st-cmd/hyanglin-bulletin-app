@@ -386,7 +386,7 @@
           <div class="form-group"><label>말씀묵상송</label><input type="text" id="w_meditationSong" value="국악찬송 13장" oninput="updatePreview()"></div>
           <div class="form-group"><label>말씀묵상송 가사/부연</label><input type="text" id="w_meditationText" value="말씀을 듣고자 모였으니 주여 우리를 도우소서" oninput="updatePreview()"></div>
           <div class="form-group"><label>복음서 읽기 구절</label><input type="text" id="w_gospelRef" value="마가복음서 4:35-41" oninput="updatePreview()"></div>
-          <div class="form-group"><label>복음서 읽기 응답 대사</label><input type="text" id="w_gospelText" value="⟨읽은이 : 이것은 주님의 말씀입니다. 회중 : 그리스도를 찬양합니다.⟩" oninput="updatePreview()"></div>
+          <div class="form-group"><label>복음서 읽기 응답 대사 (줄바꿈 가능)</label><textarea id="w_gospelText" rows="2" oninput="updatePreview()">⟨읽은이 : 이것은 주님의 말씀입니다.&#10;회중 : 그리스도를 찬양합니다.⟩</textarea></div>
           <div class="form-group"><label>하늘뜻펴기 제목</label><input type="text" id="w_sermonTitle" value="“바다 저쪽으로 건너가자”" oninput="updatePreview()"></div>
           <div class="form-group"><label>신앙고백송</label><input type="text" id="w_creedSong" value="국악찬송 254장" oninput="updatePreview()"></div>
           <div class="form-group"><label>감사송</label><input type="text" id="w_thanksSong" value="국악찬송 21장" oninput="updatePreview()"></div>
@@ -575,7 +575,7 @@
                 <td class="col-label-cell"><span class="col-label">복 음 서 읽 기</span></td>
                 <td class="col-content">
                   <span id="pv-w_gospelRef">마가복음서 4:35-41</span>
-                  <div class="worship-subtext" id="pv-w_gospelText">⟨읽은이 : 이것은 주님의 말씀입니다. 회중 : 그리스도를 찬양합니다.⟩</div>
+                  <div class="worship-subtext" id="pv-w_gospelText">⟨읽은이 : 이것은 주님의 말씀입니다.<br>회중 : 그리스도를 찬양합니다.⟩</div>
                 </td>
               </tr>
               <tr><td class="col-asterisk"></td><td class="col-label-cell"><span class="col-label">하 늘 뜻 펴 기</span></td><td class="col-content"><strong id="pv-w_sermonTitle">“바다 저쪽으로 건너가자”</strong></td></tr>
@@ -861,7 +861,8 @@
         const val = data[id] || '';
         const pvEl = document.getElementById(`pv-${id}`);
         if (pvEl) {
-          if (id.startsWith('ann_') && id !== 'ann_onlineText' && id !== 'ann_carbonText' && id !== 'ann_pledgeText') {
+          const isMultiline = id.startsWith('ann_') || id.includes('Text') || id.includes('Lyrics') || id.includes('Summary') || id.includes('Text');
+          if (isMultiline && id !== 'ann_onlineText' && id !== 'ann_carbonText') {
             pvEl.innerHTML = val.replace(/\n/g, '<br>');
           } else {
             pvEl.innerText = val;
