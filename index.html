@@ -141,24 +141,29 @@
       letter-spacing: -1.4px; /* 기존 -1.2px에서 -0.2px 추가 축소한 -1.4px 지정 */
     }
 
-    .worship-table .col-content {
+    .worship-table .col-content,
+    .worship-table .col-content * {
       width: auto;
       vertical-align: top;
       word-break: keep-all;
-      padding: 6px 8px 6px 12px; /* 상하 padding 4px -> 6px 확장 */
       background: transparent;
-      font-size: 15pt; /* 15pt 적용 */
-      font-family: 'Gowun Batang', serif; /* "1부: 주일예배"와 동일한 폰트 적용 */
+      font-size: 15pt !important; /* 내용 전체 15pt 무조건 강제 적용 */
+      font-family: 'Gowun Batang', serif !important; /* "1부: 주일예배"와 동일한 고운바탕체 적용 */
     }
 
-    /* 부연 설명 텍스트 오른쪽 정렬 */
+    .worship-table .col-content {
+      padding: 6px 8px 6px 12px;
+    }
+
+    /* 부연 설명 텍스트 (가사, 본문, 작곡가 등 포함) 오른쪽 정렬 및 15pt 적용 */
     .worship-subtext,
+    .worship-table .col-content .worship-subtext,
     .worship-table .col-content .sub-text {
-      font-size: 13pt;
+      font-size: 15pt !important; /* 15pt 강력 적용 */
       color: #000000;
       margin-top: 4px;
       text-align: right;
-      font-family: 'Gowun Batang', serif;
+      font-family: 'Gowun Batang', serif !important;
     }
     
     /* 교독송 악보 첨부 영역 (우측 끝까지 100% 정밀 확장) */
@@ -519,7 +524,7 @@
                 <td class="col-asterisk"></td>
                 <td class="col-label-cell"><span class="col-label">찬 양</span></td>
                 <td class="col-content">
-                  <strong id="pv-w_choirTitle">“내가 산을 향하여”</strong> <span id="pv-w_choirComposer" style="font-size:12pt; color:#444;">(글: Joseph M. Martin, 곡: Joseph M. Martin & David Angerman)</span>
+                  <strong id="pv-w_choirTitle">“내가 산을 향하여”</strong> <span id="pv-w_choirComposer" style="color:#444;">(글: Joseph M. Martin, 곡: Joseph M. Martin & David Angerman)</span>
                   <div class="worship-subtext" id="pv-w_choirLyrics" style="margin-top:4px;">내가 산을 향하여서 나의 눈을 들리라 나의 도움이 어디서 올꼬<br>천지를 지으신 여호와에게서로다</div>
                 </td>
               </tr>
